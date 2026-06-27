@@ -123,6 +123,41 @@ function renderCart() {
   `).join("");
 }
 
+function renderCheckout() {
+  const checkoutItems = document.getElementById("checkoutItems");
+
+  if (!checkoutItems) {
+    return;
+  }
+
+  const cart = readCart();
+  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalElement = document.getElementById("checkoutTotal");
+
+  if (totalElement) {
+    totalElement.textContent = formatWon(total);
+  }
+
+  if (cart.length === 0) {
+    checkoutItems.innerHTML = `
+      <div class="empty-checkout">
+        <strong>담긴 서비스가 없습니다.</strong>
+        <p>서비스를 먼저 장바구니에 담아주세요.</p>
+        <a class="link-button center-link" href="./services.html">서비스 보러가기</a>
+      </div>
+    `;
+    return;
+  }
+
+  checkoutItems.innerHTML = cart.map((item) => `
+    <article>
+      <span>${item.name}</span>
+      <strong>${formatWon(item.price * item.quantity)}</strong>
+      <small>${item.quantity}개 · ${item.desc}</small>
+    </article>
+  `).join("");
+}
+
 function setupSlider() {
   const slides = Array.from(document.querySelectorAll(".slide"));
   const dots = Array.from(document.querySelectorAll(".dots button"));
@@ -171,6 +206,28 @@ function setupNoticeSearch() {
     rows.forEach((row) => {
       row.hidden = keyword.length > 0 && !row.textContent.toLowerCase().includes(keyword);
     });
+  });
+}
+
+function setupFooterLinks() {
+  const footerLinks = document.querySelector(".footer-links");
+
+  if (!footerLinks || footerLinks.querySelector("[data-policy-link]")) {
+    return;
+  }
+
+  const root = document.body.dataset.root === ".." ? "." : "./pages";
+  const links = [
+    { href: `${root}/terms.html`, label: "이용약관" },
+    { href: `${root}/privacy.html`, label: "개인정보처리방침" }
+  ];
+
+  links.forEach((link) => {
+    const anchor = document.createElement("a");
+    anchor.href = link.href;
+    anchor.textContent = link.label;
+    anchor.dataset.policyLink = "true";
+    footerLinks.appendChild(anchor);
   });
 }
 
@@ -234,10 +291,12 @@ document.getElementById("checkoutButton")?.addEventListener("click", () => {
     return;
   }
 
-  showToast("결제 기능은 결제 링크 또는 PG 정보가 준비되면 연결됩니다.");
+  window.location.href = "./checkout.html";
 });
 
 setupSlider();
 setupNoticeSearch();
+setupFooterLinks();
 updateCartBadges();
 renderCart();
+renderCheckout();
