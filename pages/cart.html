@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>장바구니 - 아힘하</title>
+  <meta name="description" content="아힘하 서비스 장바구니입니다.">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body data-root="..">
+  <header class="site-header">
+    <a class="brand" href="../index.html" aria-label="아힘하 홈"><strong>아힘하</strong><span>공구 운영 도우미</span></a>
+    <button class="menu-toggle" type="button" aria-label="메뉴 열기">메뉴</button>
+    <nav class="main-nav" aria-label="주요 메뉴">
+      <a href="../index.html">홈</a>
+      <a href="./services.html">서비스</a>
+      <a href="./guide.html">이용가이드</a>
+      <a href="./notice.html">공지사항</a>
+      <a href="./support.html">고객센터</a>
+    </nav>
+    <div class="account-actions">
+      <a class="ghost-button" href="./find-account.html">ID/PW 찾기</a>
+      <a class="ghost-button" href="./login.html">로그인</a>
+      <a class="solid-button" href="./signup.html">회원가입</a>
+      <a class="cart-link is-active" href="./cart.html">장바구니 <span class="cart-badge" data-cart-count>0</span></a>
+    </div>
+  </header>
+
+  <main class="subpage">
+    <section class="page-hero compact-hero">
+      <p class="eyebrow dark">장바구니</p>
+      <h1>담은 서비스를 확인하고 수량을 조절하세요.</h1>
+      <p>지금은 실제 결제 연결 전 단계입니다. 담기, 삭제, 합계 계산이 되는 사이트 흐름을 먼저 준비했습니다.</p>
+    </section>
+
+    <section class="section cart-section">
+      <div class="cart-layout">
+        <div class="cart-items" id="cartItems" aria-live="polite"></div>
+        <aside class="cart-summary">
+          <h2>주문 요약</h2>
+          <div class="summary-row"><span>상품 수</span><strong id="cartItemCount">0개</strong></div>
+          <div class="summary-row"><span>예상 합계</span><strong id="cartTotal">0원</strong></div>
+          <p>상담 후 실제 작업 범위와 금액이 확정됩니다.</p>
+          <button class="primary-button" type="button" id="checkoutButton">결제 준비하기</button>
+          <a class="link-button center-link" href="./services.html">서비스 더 담기</a>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div><strong>아힘하</strong><p>공구 판매자와 온라인 초보 셀러를 위한 운영 도우미</p></div>
+    <div class="footer-links"><a href="#" aria-disabled="true">Instagram 준비중</a><a href="#" aria-disabled="true">KakaoTalk 준비중</a><a href="./support.html">고객센터</a></div>
+  </footer>
+  <script src="../script.js"></script>
+</body>
+</html>
