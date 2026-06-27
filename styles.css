@@ -1360,6 +1360,65 @@ textarea {
   line-height: 1.55;
 }
 
+.sample-section {
+  background: var(--white);
+}
+
+.sample-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.sample-card {
+  display: grid;
+  gap: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 24px;
+  background: #fbfdfc;
+}
+
+.sample-card.wide {
+  grid-column: 1 / -1;
+}
+
+.sample-card h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.sample-copy {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.sample-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+}
+
+.sample-table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+}
+
+.sample-table th,
+.sample-table td {
+  border-bottom: 1px solid var(--line);
+  padding: 14px;
+  text-align: left;
+}
+
+.sample-table th {
+  background: #eef5f1;
+  color: var(--green-dark);
+}
+
 .toast {
   position: fixed;
   left: 50%;
@@ -1478,7 +1537,8 @@ textarea {
   .checklist-grid,
   .research-grid,
   .mypage-grid,
-  .prep-grid {
+  .prep-grid,
+  .sample-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -1520,6 +1580,7 @@ textarea {
   .research-grid,
   .mypage-grid,
   .prep-grid,
+  .sample-grid,
   .tool-form {
     grid-template-columns: 1fr;
   }
