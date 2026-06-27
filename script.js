@@ -5,12 +5,15 @@ const panels = {
   signup: document.getElementById("signupPanel"),
   find: document.getElementById("findPanel"),
   guide: document.getElementById("guidePanel"),
+  guideModal: document.getElementById("guidePanel"),
   center: document.getElementById("centerPanel"),
   cart: document.getElementById("cartPanel"),
   notice: document.getElementById("noticePanel")
 };
 
 let currentSlide = 0;
+const siteHeader = document.querySelector(".site-header");
+const menuToggle = document.querySelector(".menu-toggle");
 
 function showSlide(index) {
   currentSlide = (index + slides.length) % slides.length;
@@ -42,6 +45,10 @@ setInterval(() => {
   showSlide(currentSlide + 1);
 }, 5000);
 
+menuToggle.addEventListener("click", () => {
+  siteHeader.classList.toggle("is-open");
+});
+
 document.querySelectorAll("[data-panel]").forEach((button) => {
   button.addEventListener("click", () => {
     const panel = panels[button.dataset.panel];
@@ -57,6 +64,13 @@ document.querySelectorAll("[data-panel]").forEach((button) => {
     });
 
     panel.showModal();
+    siteHeader.classList.remove("is-open");
+  });
+});
+
+document.querySelectorAll(".main-nav a").forEach((link) => {
+  link.addEventListener("click", () => {
+    siteHeader.classList.remove("is-open");
   });
 });
 
