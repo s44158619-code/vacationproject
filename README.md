@@ -6,6 +6,7 @@
 
 - `index.html`: 메인 이미지 슬라이드, 문제 제기, 차별점, 서비스 미리보기
 - `pages/services.html`: 서비스 상세 목록과 장바구니 담기
+- `pages/tools.html`: 무료 마진 계산기와 공구 준비 체크
 - `pages/guide.html`: 이용 순서와 자료 준비 체크리스트
 - `pages/notice.html`: 공지사항 목록, 검색, 상세 안내
 - `pages/support.html`: 고객센터, 문의 폼, Instagram/KakaoTalk 연결 예정 자리
@@ -25,6 +26,8 @@
 - localStorage 기반 장바구니
 - 장바구니 배지 자동 갱신
 - 공지사항 검색
+- 마진 계산기
+- 공구 준비율 체크
 - 백엔드 연결 전 임시 폼 안내
 - 모바일 메뉴
 - 결제 준비 페이지 이동

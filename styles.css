@@ -1263,6 +1263,103 @@ textarea {
   line-height: 1.7;
 }
 
+.tools-section {
+  display: grid;
+  gap: 24px;
+  background: var(--white);
+}
+
+.margin-tool {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.45fr) minmax(0, 0.75fr) minmax(260px, 0.4fr);
+  gap: 18px;
+  align-items: stretch;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 24px;
+  background: #fbfdfc;
+}
+
+.margin-tool h2,
+.prep-tool h2 {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.14;
+}
+
+.margin-tool p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.tool-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.tool-result,
+.progress-card {
+  display: grid;
+  align-content: center;
+  gap: 14px;
+  border-radius: 8px;
+  padding: 24px;
+  background: var(--green-dark);
+  color: var(--white);
+}
+
+.tool-result > span,
+.progress-card span {
+  color: #d6ebe3;
+  font-weight: 900;
+}
+
+.tool-result > strong,
+.progress-card strong {
+  color: var(--gold);
+  font-size: clamp(38px, 5vw, 58px);
+  line-height: 1;
+}
+
+.prep-tool {
+  display: grid;
+  gap: 18px;
+}
+
+.prep-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.prep-grid label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 58px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 16px;
+  background: var(--white);
+  font-weight: 850;
+}
+
+.prep-grid input {
+  width: 18px;
+  height: 18px;
+}
+
+.progress-card {
+  background: #14231f;
+}
+
+.progress-card p {
+  margin: 0;
+  color: #d6ebe3;
+  line-height: 1.55;
+}
+
 .toast {
   position: fixed;
   left: 50%;
@@ -1363,7 +1460,8 @@ textarea {
   .page-hero,
   .support-grid-section,
   .cart-layout,
-  .checkout-section {
+  .checkout-section,
+  .margin-tool {
     grid-template-columns: 1fr;
   }
 
@@ -1379,7 +1477,8 @@ textarea {
   .timeline-list,
   .checklist-grid,
   .research-grid,
-  .mypage-grid {
+  .mypage-grid,
+  .prep-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -1419,7 +1518,9 @@ textarea {
   .checklist-grid,
   .notice-detail-grid,
   .research-grid,
-  .mypage-grid {
+  .mypage-grid,
+  .prep-grid,
+  .tool-form {
     grid-template-columns: 1fr;
   }
 

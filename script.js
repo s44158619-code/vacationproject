@@ -231,6 +231,79 @@ function setupFooterLinks() {
   });
 }
 
+function setupToolsNavLink() {
+  const nav = document.querySelector(".main-nav");
+
+  if (!nav || nav.querySelector("[data-tools-link]") || Array.from(nav.querySelectorAll("a")).some((link) => link.textContent.includes("무료도구"))) {
+    return;
+  }
+
+  const root = document.body.dataset.root === ".." ? "." : "./pages";
+  const guideLink = Array.from(nav.querySelectorAll("a")).find((link) => link.textContent.includes("이용가이드"));
+  const toolsLink = document.createElement("a");
+  toolsLink.href = `${root}/tools.html`;
+  toolsLink.textContent = "무료도구";
+  toolsLink.dataset.toolsLink = "true";
+
+  if (location.pathname.endsWith("/tools.html")) {
+    toolsLink.classList.add("is-active");
+  }
+
+  if (guideLink) {
+    nav.insertBefore(toolsLink, guideLink);
+  } else {
+    nav.appendChild(toolsLink);
+  }
+}
+
+function setupMarginTool() {
+  const ids = ["toolPrice", "toolCost", "toolShipping", "toolPacking", "toolFee", "toolEtc"];
+  const fields = ids.map((id) => document.getElementById(id));
+
+  if (fields.some((field) => !field)) {
+    return;
+  }
+
+  function read(id) {
+    const value = Number(document.getElementById(id).value);
+    return Number.isFinite(value) ? value : 0;
+  }
+
+  function update() {
+    const price = read("toolPrice");
+    const totalCost = ids.slice(1).reduce((sum, id) => sum + read(id), 0);
+    const profit = price - totalCost;
+    const rate = price > 0 ? (profit / price) * 100 : 0;
+
+    document.getElementById("toolProfit").textContent = formatWon(profit);
+    document.getElementById("toolRate").textContent = `${rate.toFixed(1)}%`;
+    document.getElementById("toolTotalCost").textContent = formatWon(totalCost);
+  }
+
+  fields.forEach((field) => field.addEventListener("input", update));
+  update();
+}
+
+function setupPrepProgress() {
+  const wrapper = document.querySelector("[data-progress-checks]");
+  const progress = document.getElementById("prepProgress");
+
+  if (!wrapper || !progress) {
+    return;
+  }
+
+  const checks = Array.from(wrapper.querySelectorAll("input[type='checkbox']"));
+
+  function update() {
+    const done = checks.filter((check) => check.checked).length;
+    const rate = checks.length > 0 ? Math.round((done / checks.length) * 100) : 0;
+    progress.textContent = `${rate}%`;
+  }
+
+  checks.forEach((check) => check.addEventListener("change", update));
+  update();
+}
+
 menuToggle?.addEventListener("click", () => {
   siteHeader?.classList.toggle("is-open");
 });
@@ -297,6 +370,9 @@ document.getElementById("checkoutButton")?.addEventListener("click", () => {
 setupSlider();
 setupNoticeSearch();
 setupFooterLinks();
+setupToolsNavLink();
+setupMarginTool();
+setupPrepProgress();
 updateCartBadges();
 renderCart();
 renderCheckout();
