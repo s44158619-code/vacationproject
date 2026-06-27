@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /pages/admin.html
 
 Sitemap: https://ahimha.kr/sitemap.xml

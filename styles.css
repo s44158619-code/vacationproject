@@ -1419,6 +1419,219 @@ textarea {
   color: var(--green-dark);
 }
 
+.admin-header {
+  background: rgba(244, 248, 246, 0.98);
+}
+
+.admin-page {
+  min-height: 100vh;
+  background: #f3f7f5;
+}
+
+.admin-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
+  gap: 24px;
+  align-items: end;
+  padding: clamp(64px, 9vw, 110px) clamp(18px, 5vw, 72px) clamp(42px, 7vw, 76px);
+  background: linear-gradient(180deg, #ffffff, #f3f7f5);
+  border-bottom: 1px solid var(--line);
+}
+
+.admin-hero h1 {
+  margin: 0;
+  font-size: clamp(34px, 5vw, 62px);
+  line-height: 1.1;
+}
+
+.admin-hero p:not(.eyebrow) {
+  max-width: 780px;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.75;
+}
+
+.admin-alert {
+  display: grid;
+  gap: 8px;
+  border-radius: 8px;
+  padding: 22px;
+  background: #14231f;
+  color: var(--white);
+}
+
+.admin-alert span,
+.admin-alert small {
+  color: #d6ebe3;
+}
+
+.admin-summary-section,
+.admin-grid-section,
+.admin-board-section,
+.admin-quick-section {
+  background: #f3f7f5;
+}
+
+.admin-summary-grid,
+.admin-grid-section,
+.admin-board,
+.admin-link-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.admin-summary-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.admin-grid-section {
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.52fr);
+  align-items: start;
+}
+
+.admin-summary-grid article,
+.admin-card,
+.admin-board article {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 22px;
+  background: var(--white);
+  box-shadow: 0 16px 44px rgba(23, 32, 29, 0.07);
+}
+
+.admin-summary-grid article {
+  display: grid;
+  gap: 8px;
+}
+
+.admin-summary-grid span {
+  color: var(--muted);
+  font-weight: 850;
+}
+
+.admin-summary-grid strong {
+  color: var(--green);
+  font-size: 42px;
+  line-height: 1;
+}
+
+.admin-summary-grid p,
+.admin-board p,
+.admin-cart-preview p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.admin-card {
+  display: grid;
+  gap: 18px;
+}
+
+.admin-card-head h2 {
+  margin: 0;
+  font-size: clamp(26px, 4vw, 38px);
+  line-height: 1.14;
+}
+
+.admin-checklist {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.admin-checklist label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: #fbfdfc;
+}
+
+.admin-checklist input {
+  width: 18px;
+  height: 18px;
+}
+
+.admin-total-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  border-radius: 8px;
+  padding: 16px;
+  background: var(--green-dark);
+  color: var(--white);
+}
+
+.admin-total-row strong {
+  color: var(--gold);
+}
+
+.admin-cart-preview {
+  display: grid;
+  gap: 10px;
+}
+
+.admin-cart-preview article {
+  display: grid;
+  gap: 5px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  background: #fbfdfc;
+}
+
+.admin-cart-preview strong {
+  color: var(--green-dark);
+}
+
+.admin-cart-preview span {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.admin-board {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.admin-board article {
+  display: grid;
+  gap: 10px;
+}
+
+.admin-board strong {
+  font-size: 22px;
+}
+
+.admin-board span {
+  display: inline-flex;
+  width: fit-content;
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: #fff3de;
+  color: #9c5a11;
+  font-weight: 950;
+}
+
+.admin-link-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.admin-link-grid a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfdfc;
+  color: var(--green-dark);
+  font-weight: 950;
+}
+
 .toast {
   position: fixed;
   left: 50%;
@@ -1520,7 +1733,9 @@ textarea {
   .support-grid-section,
   .cart-layout,
   .checkout-section,
-  .margin-tool {
+  .margin-tool,
+  .admin-hero,
+  .admin-grid-section {
     grid-template-columns: 1fr;
   }
 
@@ -1538,7 +1753,10 @@ textarea {
   .research-grid,
   .mypage-grid,
   .prep-grid,
-  .sample-grid {
+  .sample-grid,
+  .admin-summary-grid,
+  .admin-board,
+  .admin-link-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -1581,6 +1799,10 @@ textarea {
   .mypage-grid,
   .prep-grid,
   .sample-grid,
+  .admin-summary-grid,
+  .admin-board,
+  .admin-link-grid,
+  .admin-checklist,
   .tool-form {
     grid-template-columns: 1fr;
   }

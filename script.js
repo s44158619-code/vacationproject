@@ -304,6 +304,44 @@ function setupPrepProgress() {
   update();
 }
 
+function setupAdminDashboard() {
+  const countElement = document.getElementById("adminCartCount");
+  const totalElement = document.getElementById("adminCartTotal");
+  const previewElement = document.getElementById("adminCartPreview");
+  const updatedAtElement = document.getElementById("adminUpdatedAt");
+
+  if (!countElement && !totalElement && !previewElement && !updatedAtElement) {
+    return;
+  }
+
+  const cart = readCart();
+  const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  if (countElement) {
+    countElement.textContent = count;
+  }
+
+  if (totalElement) {
+    totalElement.textContent = formatWon(total);
+  }
+
+  if (previewElement) {
+    previewElement.innerHTML = cart.length === 0
+      ? "<p>담긴 서비스가 없습니다.</p>"
+      : cart.map((item) => `
+        <article>
+          <strong>${item.name}</strong>
+          <span>${item.quantity}개 · ${formatWon(item.price * item.quantity)}</span>
+        </article>
+      `).join("");
+  }
+
+  if (updatedAtElement) {
+    updatedAtElement.textContent = `마지막 확인: ${new Date().toLocaleString("ko-KR")}`;
+  }
+}
+
 menuToggle?.addEventListener("click", () => {
   siteHeader?.classList.toggle("is-open");
 });
@@ -373,6 +411,7 @@ setupFooterLinks();
 setupToolsNavLink();
 setupMarginTool();
 setupPrepProgress();
+setupAdminDashboard();
 updateCartBadges();
 renderCart();
 renderCheckout();
