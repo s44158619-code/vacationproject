@@ -6,7 +6,7 @@
 
 - `index.html`: 메인 이미지 슬라이드, 문제 제기, 차별점, 서비스 미리보기
 - `pages/services.html`: 서비스 상세 목록과 장바구니 담기
-- `pages/market.html`: 상품 가격검색, 공구 마진 비교, 식당 메뉴 원가 계산
+- `pages/market.html`: 101개 기준가 카탈로그 기반 상품 가격검색, 공구 마진 비교, 식당 메뉴 원가 계산
 - `pages/tools.html`: 무료 마진 계산기와 공구 준비 체크
 - `pages/samples.html`: 주문관리표, 안내문, 상세페이지 문구 샘플
 - `pages/guide.html`: 이용 순서와 자료 준비 체크리스트

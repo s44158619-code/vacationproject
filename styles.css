@@ -1476,6 +1476,18 @@ textarea {
   line-height: 1.6;
 }
 
+.source-note em {
+  display: inline-flex;
+  width: fit-content;
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: var(--green-dark);
+  color: var(--white);
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 950;
+}
+
 .market-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(340px, 0.55fr);

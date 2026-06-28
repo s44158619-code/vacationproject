@@ -30,6 +30,78 @@ const MARKET_PRODUCTS = [
   { id: "butter", name: "버터", aliases: "유제품 베이커리 식당 재료", category: "restaurant", unit: "kg", buyPrice: 9500, retailPrice: 14000, sellPrice: 18000, source: "시장 기준가 샘플", updated: "2026-06-28" }
 ];
 
+const EXTRA_MARKET_PRODUCTS = [
+  { id: "banana", name: "바나나", aliases: "과일 카페 디저트", category: "fruit", unit: "kg", buyPrice: 2600, retailPrice: 3900, sellPrice: 5200, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "kiwi", name: "키위", aliases: "골드키위 그린키위 과일", category: "fruit", unit: "kg", buyPrice: 6800, retailPrice: 9800, sellPrice: 12800, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "mango", name: "망고", aliases: "열대과일 디저트 카페", category: "fruit", unit: "kg", buyPrice: 7900, retailPrice: 12000, sellPrice: 15900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "peach", name: "복숭아", aliases: "과일 황도 백도", category: "fruit", unit: "kg", buyPrice: 6200, retailPrice: 9300, sellPrice: 11900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "plum", name: "자두", aliases: "과일", category: "fruit", unit: "kg", buyPrice: 4300, retailPrice: 6800, sellPrice: 8900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "persimmon", name: "감", aliases: "단감 홍시 과일", category: "fruit", unit: "kg", buyPrice: 4100, retailPrice: 6400, sellPrice: 8300, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "melon", name: "멜론", aliases: "과일 디저트", category: "fruit", unit: "kg", buyPrice: 4800, retailPrice: 7400, sellPrice: 9800, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "cherry", name: "체리", aliases: "과일 디저트", category: "fruit", unit: "kg", buyPrice: 14500, retailPrice: 21000, sellPrice: 26900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "blueberry", name: "블루베리", aliases: "베리 과일 카페 디저트", category: "fruit", unit: "kg", buyPrice: 13800, retailPrice: 19800, sellPrice: 24900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "avocado", name: "아보카도", aliases: "샐러드 과일 식당 재료", category: "restaurant", unit: "kg", buyPrice: 7200, retailPrice: 10800, sellPrice: 13900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "lemon", name: "레몬", aliases: "과일 카페 식당 재료", category: "restaurant", unit: "kg", buyPrice: 4300, retailPrice: 6800, sellPrice: 8900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "orange", name: "오렌지", aliases: "과일 카페 주스", category: "fruit", unit: "kg", buyPrice: 3900, retailPrice: 6200, sellPrice: 7900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "pineapple", name: "파인애플", aliases: "과일 디저트 카페", category: "fruit", unit: "kg", buyPrice: 3000, retailPrice: 4800, sellPrice: 6500, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "grapefruit", name: "자몽", aliases: "과일 카페 음료", category: "fruit", unit: "kg", buyPrice: 4200, retailPrice: 6800, sellPrice: 8900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "carrot", name: "당근", aliases: "채소 식당 재료 샐러드", category: "vegetable", unit: "kg", buyPrice: 1600, retailPrice: 2600, sellPrice: 3600, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "green-onion", name: "대파", aliases: "파 채소 식당 재료", category: "vegetable", unit: "kg", buyPrice: 2100, retailPrice: 3500, sellPrice: 4700, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "spinach", name: "시금치", aliases: "나물 채소 식당 재료", category: "vegetable", unit: "kg", buyPrice: 4200, retailPrice: 6500, sellPrice: 8500, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "bean-sprout", name: "콩나물", aliases: "나물 채소 식당 재료", category: "vegetable", unit: "kg", buyPrice: 1400, retailPrice: 2300, sellPrice: 3200, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "broccoli", name: "브로콜리", aliases: "채소 샐러드 식당 재료", category: "vegetable", unit: "kg", buyPrice: 3600, retailPrice: 5600, sellPrice: 7300, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "paprika", name: "파프리카", aliases: "채소 샐러드 식당 재료", category: "vegetable", unit: "kg", buyPrice: 5200, retailPrice: 7800, sellPrice: 9900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "zucchini", name: "애호박", aliases: "호박 채소 식당 재료", category: "vegetable", unit: "kg", buyPrice: 2100, retailPrice: 3400, sellPrice: 4500, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "eggplant", name: "가지", aliases: "채소 식당 재료", category: "vegetable", unit: "kg", buyPrice: 2900, retailPrice: 4600, sellPrice: 6100, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "pumpkin", name: "단호박", aliases: "호박 채소 식당 재료", category: "vegetable", unit: "kg", buyPrice: 2400, retailPrice: 3900, sellPrice: 5200, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "cabbage-green", name: "양배추", aliases: "샐러드 채소 식당 재료", category: "vegetable", unit: "kg", buyPrice: 1300, retailPrice: 2200, sellPrice: 3100, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "perilla-leaf", name: "깻잎", aliases: "쌈채소 식당 재료", category: "restaurant", unit: "kg", buyPrice: 9500, retailPrice: 14000, sellPrice: 17900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "chili-pepper", name: "고추", aliases: "풋고추 청양고추 채소 식당 재료", category: "vegetable", unit: "kg", buyPrice: 5200, retailPrice: 8100, sellPrice: 10500, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "kale", name: "케일", aliases: "샐러드 채소 식당 재료", category: "restaurant", unit: "kg", buyPrice: 6200, retailPrice: 9300, sellPrice: 11900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "celery", name: "셀러리", aliases: "샐러드 채소 식당 재료", category: "restaurant", unit: "kg", buyPrice: 3800, retailPrice: 5900, sellPrice: 7600, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "corn", name: "옥수수", aliases: "채소 식당 재료 간식", category: "vegetable", unit: "kg", buyPrice: 2300, retailPrice: 3600, sellPrice: 4900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "brown-rice", name: "현미", aliases: "쌀 곡물 식당 재료", category: "grain", unit: "kg", buyPrice: 3100, retailPrice: 4400, sellPrice: 5600, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "barley", name: "보리", aliases: "곡물 식당 재료", category: "grain", unit: "kg", buyPrice: 2200, retailPrice: 3300, sellPrice: 4500, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "black-rice", name: "흑미", aliases: "쌀 곡물 식당 재료", category: "grain", unit: "kg", buyPrice: 4700, retailPrice: 6500, sellPrice: 8300, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "glutinous-rice", name: "찹쌀", aliases: "쌀 곡물 식당 재료", category: "grain", unit: "kg", buyPrice: 3500, retailPrice: 5100, sellPrice: 6600, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "oat", name: "오트밀", aliases: "귀리 곡물 카페 식당 재료", category: "grain", unit: "kg", buyPrice: 4200, retailPrice: 6500, sellPrice: 8500, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "pasta", name: "파스타면", aliases: "면 가공 식당 재료", category: "grain", unit: "kg", buyPrice: 3200, retailPrice: 4800, sellPrice: 6200, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "noodle", name: "소면", aliases: "면 국수 식당 재료", category: "grain", unit: "kg", buyPrice: 2600, retailPrice: 3900, sellPrice: 5200, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "starch", name: "전분", aliases: "가루 식당 재료", category: "grain", unit: "kg", buyPrice: 2500, retailPrice: 3900, sellPrice: 5200, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "cooking-oil", name: "식용유", aliases: "기름 식당 재료", category: "restaurant", unit: "L", buyPrice: 3300, retailPrice: 4800, sellPrice: 6200, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "olive-oil", name: "올리브유", aliases: "기름 샐러드 식당 재료", category: "restaurant", unit: "L", buyPrice: 7800, retailPrice: 11500, sellPrice: 14900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "soy-sauce", name: "간장", aliases: "소스 양념 식당 재료", category: "restaurant", unit: "L", buyPrice: 2200, retailPrice: 3400, sellPrice: 4600, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "gochujang", name: "고추장", aliases: "양념 장류 식당 재료", category: "restaurant", unit: "kg", buyPrice: 3900, retailPrice: 5900, sellPrice: 7600, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "doenjang", name: "된장", aliases: "양념 장류 식당 재료", category: "restaurant", unit: "kg", buyPrice: 3600, retailPrice: 5400, sellPrice: 7100, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "salt", name: "소금", aliases: "양념 식당 재료", category: "restaurant", unit: "kg", buyPrice: 1200, retailPrice: 1900, sellPrice: 2800, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "vinegar", name: "식초", aliases: "양념 식당 재료", category: "restaurant", unit: "L", buyPrice: 1800, retailPrice: 2800, sellPrice: 3800, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "sesame-oil", name: "참기름", aliases: "기름 양념 식당 재료", category: "restaurant", unit: "L", buyPrice: 9800, retailPrice: 14500, sellPrice: 18900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "sesame-seed", name: "깨", aliases: "참깨 양념 식당 재료", category: "restaurant", unit: "kg", buyPrice: 8200, retailPrice: 12200, sellPrice: 15900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "duck", name: "오리고기", aliases: "축산 식당 재료", category: "meat", unit: "kg", buyPrice: 9800, retailPrice: 14500, sellPrice: 18900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "lamb", name: "양고기", aliases: "축산 식당 재료", category: "meat", unit: "kg", buyPrice: 18000, retailPrice: 26000, sellPrice: 32900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "bacon", name: "베이컨", aliases: "가공육 식당 재료", category: "meat", unit: "kg", buyPrice: 9800, retailPrice: 13800, sellPrice: 17900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "ham", name: "햄", aliases: "가공육 식당 재료", category: "meat", unit: "kg", buyPrice: 6800, retailPrice: 9800, sellPrice: 12900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "sausage", name: "소시지", aliases: "가공육 식당 재료", category: "meat", unit: "kg", buyPrice: 7200, retailPrice: 10500, sellPrice: 13900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "pork-belly", name: "삼겹살", aliases: "돼지고기 축산 식당 재료", category: "meat", unit: "kg", buyPrice: 13500, retailPrice: 19500, sellPrice: 24900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "pork-shoulder", name: "목살", aliases: "돼지고기 축산 식당 재료", category: "meat", unit: "kg", buyPrice: 11500, retailPrice: 16800, sellPrice: 21900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "beef-brisket", name: "차돌박이", aliases: "소고기 축산 식당 재료", category: "meat", unit: "kg", buyPrice: 22000, retailPrice: 33000, sellPrice: 42900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "beef-sirloin", name: "등심", aliases: "소고기 축산 식당 재료", category: "meat", unit: "kg", buyPrice: 32000, retailPrice: 48000, sellPrice: 62000, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "mackerel", name: "고등어", aliases: "수산물 생선 식당 재료", category: "meat", unit: "kg", buyPrice: 5600, retailPrice: 8400, sellPrice: 10900, source: "수산물 기준가 샘플", updated: "2026-06-28" },
+  { id: "squid", name: "오징어", aliases: "수산물 식당 재료", category: "meat", unit: "kg", buyPrice: 7800, retailPrice: 11500, sellPrice: 14900, source: "수산물 기준가 샘플", updated: "2026-06-28" },
+  { id: "shrimp", name: "새우", aliases: "수산물 식당 재료", category: "meat", unit: "kg", buyPrice: 12500, retailPrice: 18500, sellPrice: 23900, source: "수산물 기준가 샘플", updated: "2026-06-28" },
+  { id: "salmon", name: "연어", aliases: "수산물 식당 재료 샐러드", category: "restaurant", unit: "kg", buyPrice: 22500, retailPrice: 33000, sellPrice: 42900, source: "수산물 기준가 샘플", updated: "2026-06-28" },
+  { id: "tofu", name: "두부", aliases: "콩 식당 재료", category: "restaurant", unit: "kg", buyPrice: 2300, retailPrice: 3500, sellPrice: 4700, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "cheese", name: "치즈", aliases: "유제품 식당 재료 카페", category: "restaurant", unit: "kg", buyPrice: 10500, retailPrice: 15500, sellPrice: 19900, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "yogurt", name: "요거트", aliases: "유제품 카페 디저트", category: "restaurant", unit: "kg", buyPrice: 4200, retailPrice: 6500, sellPrice: 8500, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "cream", name: "생크림", aliases: "유제품 카페 베이커리", category: "restaurant", unit: "L", buyPrice: 6200, retailPrice: 8900, sellPrice: 11500, source: "확장 기준가 샘플", updated: "2026-06-28" },
+  { id: "coffee-bean", name: "원두", aliases: "커피 카페 식당 재료", category: "restaurant", unit: "kg", buyPrice: 18000, retailPrice: 26000, sellPrice: 34000, source: "카페 재료 기준가 샘플", updated: "2026-06-28" },
+  { id: "matcha", name: "말차가루", aliases: "카페 디저트 베이커리", category: "restaurant", unit: "kg", buyPrice: 24000, retailPrice: 36000, sellPrice: 46000, source: "카페 재료 기준가 샘플", updated: "2026-06-28" },
+  { id: "cocoa", name: "코코아가루", aliases: "카페 디저트 베이커리", category: "restaurant", unit: "kg", buyPrice: 9800, retailPrice: 14500, sellPrice: 18900, source: "카페 재료 기준가 샘플", updated: "2026-06-28" },
+  { id: "honey", name: "꿀", aliases: "카페 디저트 식당 재료", category: "restaurant", unit: "kg", buyPrice: 9500, retailPrice: 14500, sellPrice: 18900, source: "확장 기준가 샘플", updated: "2026-06-28" }
+];
+
+const MARKET_CATALOG = [...MARKET_PRODUCTS, ...EXTRA_MARKET_PRODUCTS];
+
 const siteHeader = document.querySelector(".site-header");
 const menuToggle = document.querySelector(".menu-toggle");
 
@@ -402,9 +474,14 @@ function setupMarketSearch() {
   const targetInput = document.getElementById("targetMargin");
   const results = document.getElementById("marketResults");
   const detail = document.getElementById("marketDetail");
+  const countBadge = document.getElementById("marketCount");
 
   if (!searchInput || !categoryInput || !targetInput || !results || !detail) {
     return;
+  }
+
+  if (countBadge) {
+    countBadge.textContent = `현재 ${MARKET_CATALOG.length}개 품목 검색 가능`;
   }
 
   function matches(product, keyword, category) {
@@ -468,7 +545,7 @@ function setupMarketSearch() {
     const keyword = searchInput.value.trim().toLowerCase();
     const category = categoryInput.value;
     const targetMargin = Number(targetInput.value) || 0;
-    const filtered = MARKET_PRODUCTS.filter((product) => matches(product, keyword, category));
+    const filtered = MARKET_CATALOG.filter((product) => matches(product, keyword, category));
 
     results.innerHTML = filtered.map((product) => {
       const { sellPrice, profit, rate } = calculateMargin(product, targetMargin);
@@ -493,7 +570,7 @@ function setupMarketSearch() {
 
     results.querySelectorAll("[data-market-id]").forEach((button) => {
       button.addEventListener("click", () => {
-        const product = MARKET_PRODUCTS.find((item) => item.id === button.dataset.marketId);
+        const product = MARKET_CATALOG.find((item) => item.id === button.dataset.marketId);
         if (product) {
           renderDetail(product);
         }
@@ -529,7 +606,7 @@ function setupRecipeCalculator() {
   ];
 
   function rowCost(row) {
-    const product = MARKET_PRODUCTS.find((item) => item.id === row.productId);
+    const product = MARKET_CATALOG.find((item) => item.id === row.productId);
     if (!product) {
       return 0;
     }
@@ -550,7 +627,7 @@ function setupRecipeCalculator() {
 
   function render() {
     list.innerHTML = rows.map((row, index) => {
-      const productOptions = MARKET_PRODUCTS.map((product) => `
+      const productOptions = MARKET_CATALOG.map((product) => `
         <option value="${product.id}" ${product.id === row.productId ? "selected" : ""}>${product.name} (${formatWon(product.buyPrice)}/${product.unit})</option>
       `).join("");
 
