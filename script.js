@@ -361,6 +361,31 @@ function calculateMargin(product, targetMargin = 30) {
   return { sellPrice, profit, rate };
 }
 
+function getMarketplacePrices(product) {
+  if (product.marketPrices) {
+    return product.marketPrices;
+  }
+
+  const roundHundred = (value) => Math.ceil(value / 100) * 100;
+
+  return [
+    { market: "쿠팡", price: roundHundred(product.sellPrice * 1.08), note: "검색가 샘플" },
+    { market: "지마켓", price: roundHundred(product.sellPrice * 1.03), note: "검색가 샘플" },
+    { market: "네이버", price: roundHundred(product.sellPrice), note: "검색가 샘플" }
+  ];
+}
+
+function getMarketplaceSearchUrl(market, keyword) {
+  const query = encodeURIComponent(keyword);
+  const urls = {
+    "쿠팡": `https://www.coupang.com/np/search?q=${query}`,
+    "지마켓": `https://browse.gmarket.co.kr/search?keyword=${query}`,
+    "네이버": `https://search.shopping.naver.com/search/all?query=${query}`
+  };
+
+  return urls[market] || `https://search.naver.com/search.naver?query=${query}`;
+}
+
 function setupMarketSearch() {
   const searchInput = document.getElementById("marketSearch");
   const categoryInput = document.getElementById("marketCategory");
@@ -383,6 +408,15 @@ function setupMarketSearch() {
     const { sellPrice, profit, rate } = calculateMargin(product, targetMargin);
     const gramPrice = product.unit === "kg" ? product.buyPrice / 1000 : product.buyPrice;
     const retailGap = product.retailPrice - product.buyPrice;
+    const marketplacePrices = getMarketplacePrices(product);
+    const marketplaceRows = marketplacePrices.map((item) => `
+      <article>
+        <span>${item.market}</span>
+        <strong>${formatWon(item.price)}</strong>
+        <small>${item.note}</small>
+        <a href="${getMarketplaceSearchUrl(item.market, product.name)}" target="_blank" rel="noopener">검색 열기</a>
+      </article>
+    `).join("");
 
     detail.innerHTML = `
       <p class="eyebrow dark">선택 상품</p>
@@ -397,6 +431,13 @@ function setupMarketSearch() {
       <div class="market-note">
         <strong>단위 계산</strong>
         <span>${product.unit === "kg" ? `1g 기준 약 ${formatWon(gramPrice)}` : `1개 기준 약 ${formatWon(gramPrice)}`} · 도매/소매 차이 ${formatWon(retailGap)}</span>
+      </div>
+      <div class="marketplace-panel">
+        <div>
+          <strong>마켓별 가격 비교</strong>
+          <span>실시간 수집값이 아니라 기준가 샘플입니다. 버튼을 누르면 각 마켓 검색으로 이동합니다.</span>
+        </div>
+        <div class="marketplace-grid">${marketplaceRows}</div>
       </div>
       <button class="add-cart-button" type="button" data-cart-id="market-${product.id}" data-cart-name="${product.name} 마진 분석 요청" data-cart-price="30000" data-cart-desc="${product.name} 기준 가격 비교와 판매가 설계" data-cart-image="../assets/hero-operations.png">이 상품 분석 요청 담기</button>
     `;
@@ -421,11 +462,16 @@ function setupMarketSearch() {
 
     results.innerHTML = filtered.map((product) => {
       const { sellPrice, profit, rate } = calculateMargin(product, targetMargin);
+      const marketplacePreview = getMarketplacePrices(product).slice(0, 3).map((item) => `
+        <em>${item.market} ${formatWon(item.price)}</em>
+      `).join("");
+
       return `
         <button class="market-card" type="button" data-market-id="${product.id}">
           <span>${product.name}</span>
           <strong>${formatWon(product.buyPrice)} / ${product.unit}</strong>
           <small>추천 ${formatWon(sellPrice)} · 마진 ${formatWon(profit)} (${rate.toFixed(1)}%)</small>
+          <div class="marketplace-preview">${marketplacePreview}</div>
         </button>
       `;
     }).join("") || `

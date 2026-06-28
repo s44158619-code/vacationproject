@@ -762,6 +762,37 @@ img {
   background: var(--white);
 }
 
+.guide-market-section {
+  background: var(--white);
+}
+
+.guide-use-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.guide-use-grid article {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 22px;
+  background: #fbfdfc;
+}
+
+.guide-use-grid strong {
+  color: var(--green-dark);
+  font-size: 22px;
+}
+
+.guide-use-grid p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
 .note-card {
   max-width: 860px;
   background: var(--green-dark);
@@ -1489,6 +1520,24 @@ textarea {
   line-height: 1.45;
 }
 
+.marketplace-preview {
+  display: grid;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.marketplace-preview em {
+  display: inline-flex;
+  width: fit-content;
+  border-radius: 999px;
+  padding: 5px 9px;
+  background: #eef5f1;
+  color: var(--green-dark);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 900;
+}
+
 .market-detail {
   position: sticky;
   top: 96px;
@@ -1525,6 +1574,68 @@ textarea {
   border-radius: 8px;
   padding: 14px;
   background: var(--white);
+}
+
+.marketplace-panel {
+  display: grid;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  background: var(--white);
+}
+
+.marketplace-panel > div:first-child {
+  display: grid;
+  gap: 5px;
+}
+
+.marketplace-panel > div:first-child span {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.marketplace-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.marketplace-grid article {
+  display: grid;
+  grid-template-columns: 62px 1fr auto;
+  gap: 8px;
+  align-items: center;
+  border-radius: 8px;
+  padding: 10px;
+  background: #fbfdfc;
+}
+
+.marketplace-grid span {
+  color: var(--green-dark);
+  font-weight: 950;
+}
+
+.marketplace-grid strong {
+  font-size: 18px;
+}
+
+.marketplace-grid small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.marketplace-grid a {
+  grid-column: 1 / -1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  border-radius: 8px;
+  background: #eef5f1;
+  color: var(--green-dark);
+  font-size: 13px;
+  font-weight: 950;
 }
 
 .market-stat-grid span,
@@ -1959,6 +2070,7 @@ textarea {
   .mypage-grid,
   .prep-grid,
   .sample-grid,
+  .guide-use-grid,
   .admin-summary-grid,
   .admin-board,
   .admin-link-grid,
@@ -2006,6 +2118,7 @@ textarea {
   .mypage-grid,
   .prep-grid,
   .sample-grid,
+  .guide-use-grid,
   .admin-summary-grid,
   .admin-board,
   .admin-link-grid,
