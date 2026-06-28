@@ -581,6 +581,11 @@ img {
   min-height: 70vh;
 }
 
+.subpage .section {
+  padding-top: clamp(42px, 6vw, 72px);
+  padding-bottom: clamp(42px, 6vw, 72px);
+}
+
 .page-hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(260px, 0.35fr);
@@ -594,10 +599,12 @@ img {
 .compact-hero {
   display: block;
   max-width: none;
+  padding-top: clamp(42px, 7vw, 76px);
+  padding-bottom: clamp(30px, 5vw, 52px);
 }
 
 .compact-hero p {
-  max-width: 760px;
+  max-width: 680px;
 }
 
 .support-card {
@@ -1464,6 +1471,10 @@ textarea {
   background: #f6faf8;
 }
 
+.restaurant-database h2 {
+  letter-spacing: 0;
+}
+
 .restaurant-database .section-heading {
   max-width: 840px;
   margin-bottom: 0;
@@ -1640,10 +1651,154 @@ textarea {
   font-weight: 950;
 }
 
+.need-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+
+.need-actions button:first-child,
+.favorite-button {
+  border: 1px solid #d7e5dd;
+  background: var(--white);
+  color: var(--green-dark);
+}
+
+.need-actions button:first-child.is-active,
+.favorite-button.is-active {
+  border-color: var(--green-dark);
+  background: #14231f;
+  color: var(--white);
+}
+
 .need-item button:disabled {
   background: #e5e9e7;
   color: #7c8782;
   cursor: not-allowed;
+}
+
+.market-favorites {
+  display: grid;
+  gap: 12px;
+  border: 1px solid #d7e5dd;
+  border-radius: 8px;
+  padding: 16px;
+  background: var(--white);
+}
+
+.market-favorites h2,
+.market-favorites p {
+  margin: 0;
+}
+
+.market-favorites p {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.favorite-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.favorite-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.favorite-item {
+  display: grid;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  background: #fbfdfc;
+}
+
+.favorite-item strong {
+  color: var(--green-dark);
+}
+
+.favorite-item span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.favorite-item div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.favorite-item button {
+  min-height: 32px;
+  border: 1px solid #d7e5dd;
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--green-dark);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.market-advanced-panel,
+.recipe-disclosure {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0;
+  background: var(--white);
+}
+
+.market-advanced-panel summary,
+.recipe-disclosure summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 62px;
+  padding: 0 18px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.market-advanced-panel summary::-webkit-details-marker,
+.recipe-disclosure summary::-webkit-details-marker {
+  display: none;
+}
+
+.market-advanced-panel summary span,
+.recipe-disclosure summary span {
+  color: var(--green-dark);
+  font-size: 19px;
+  font-weight: 950;
+}
+
+.market-advanced-panel summary small,
+.recipe-disclosure summary small {
+  color: var(--muted);
+  font-weight: 850;
+}
+
+.market-advanced-panel[open],
+.recipe-disclosure[open] {
+  padding-bottom: 18px;
+}
+
+.market-advanced-panel[open] summary,
+.recipe-disclosure[open] summary {
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 16px;
+}
+
+.market-advanced-panel > .market-toolbar,
+.market-advanced-panel > .source-note,
+.market-advanced-panel > .market-layout,
+.recipe-disclosure > .section-heading,
+.recipe-disclosure > .recipe-calculator {
+  margin-left: 18px;
+  margin-right: 18px;
 }
 
 .market-toolbar {
@@ -1724,6 +1879,16 @@ textarea {
   padding: 18px;
   background: var(--white);
   color: var(--ink);
+  text-align: left;
+}
+
+.market-card-main {
+  display: grid;
+  gap: 8px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
   text-align: left;
 }
 
@@ -1874,6 +2039,19 @@ textarea {
 
 .market-stat-grid strong {
   color: var(--green-dark);
+}
+
+.market-detail-actions {
+  display: grid;
+  grid-template-columns: 0.8fr 1fr;
+  gap: 10px;
+}
+
+.favorite-button,
+.market-detail-actions .add-cart-button {
+  min-height: 42px;
+  border-radius: 8px;
+  font-weight: 950;
 }
 
 .recipe-section {
@@ -2342,6 +2520,7 @@ textarea {
   .admin-summary-grid,
   .admin-board,
   .admin-link-grid,
+  .favorite-list,
   .need-list,
   .market-results,
   .market-stat-grid {
@@ -2392,6 +2571,8 @@ textarea {
   .admin-board,
   .admin-link-grid,
   .admin-checklist,
+  .favorite-list,
+  .market-detail-actions,
   .restaurant-toolbar,
   .need-list,
   .market-toolbar,
@@ -2423,6 +2604,15 @@ textarea {
   .market-result-summary {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .market-advanced-panel summary,
+  .recipe-disclosure summary,
+  .favorite-head {
+    align-items: flex-start;
+    flex-direction: column;
+    padding-top: 14px;
+    padding-bottom: 14px;
   }
 
   .notice-row {

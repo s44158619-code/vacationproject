@@ -1,4 +1,5 @@
 const CART_KEY = "ahimha-cart";
+const MARKET_FAVORITES_KEY = "ahimha-market-favorites";
 const ADMIN_AUTH_KEY = "ahimha-admin-auth";
 const ADMIN_CREDENTIAL_HASH = "1dd87a003c3d682c5cf1914258701986b9e805c8b6da5574fd582e2aa896a746";
 const currency = new Intl.NumberFormat("ko-KR");
@@ -588,6 +589,143 @@ function addToCart(product) {
   showToast(`${product.name}을 장바구니에 담았습니다.`);
 }
 
+function readMarketFavorites() {
+  try {
+    return JSON.parse(localStorage.getItem(MARKET_FAVORITES_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function saveMarketFavorites(favorites) {
+  localStorage.setItem(MARKET_FAVORITES_KEY, JSON.stringify(favorites));
+  renderMarketFavorites();
+  updateFavoriteButtons();
+}
+
+function isMarketFavorite(id) {
+  return readMarketFavorites().some((item) => item.id === id);
+}
+
+function addMarketFavorite(product) {
+  if (!product) {
+    return;
+  }
+
+  const favorites = readMarketFavorites();
+
+  if (favorites.some((item) => item.id === product.id)) {
+    showToast("이미 찜한 품목입니다.");
+    updateFavoriteButtons();
+    return;
+  }
+
+  favorites.unshift({
+    id: product.id,
+    name: product.name,
+    unit: product.unit,
+    buyPrice: product.buyPrice,
+    category: product.category,
+    source: product.source
+  });
+
+  saveMarketFavorites(favorites.slice(0, 80));
+  showToast("찜한 품목에 담았습니다.");
+}
+
+function removeMarketFavorite(id) {
+  const favorites = readMarketFavorites().filter((item) => item.id !== id);
+  saveMarketFavorites(favorites);
+  showToast("찜한 품목에서 뺐습니다.");
+}
+
+function toggleMarketFavorite(product) {
+  if (!product) {
+    return;
+  }
+
+  if (isMarketFavorite(product.id)) {
+    removeMarketFavorite(product.id);
+    return;
+  }
+
+  addMarketFavorite(product);
+}
+
+function updateFavoriteButtons() {
+  const favoriteIds = new Set(readMarketFavorites().map((item) => item.id));
+
+  document.querySelectorAll("[data-favorite-id]").forEach((button) => {
+    const active = favoriteIds.has(button.dataset.favoriteId);
+    button.classList.toggle("is-active", active);
+    button.textContent = active ? "찜해제" : "찜하기";
+    button.setAttribute("aria-pressed", String(active));
+  });
+}
+
+function renderMarketFavorites() {
+  const panel = document.getElementById("marketFavorites");
+
+  if (!panel) {
+    return;
+  }
+
+  const favorites = readMarketFavorites();
+
+  if (!favorites.length) {
+    panel.innerHTML = `
+      <div>
+        <p class="eyebrow dark">찜한 품목</p>
+        <h2>아직 담긴 품목이 없습니다.</h2>
+        <p>업종별 필요 품목에서 자주 비교할 재료와 포장재를 찜해두세요.</p>
+      </div>
+    `;
+    return;
+  }
+
+  panel.innerHTML = `
+    <div class="favorite-head">
+      <div>
+        <p class="eyebrow dark">찜한 품목</p>
+        <h2>${favorites.length}개 품목</h2>
+      </div>
+      <button class="link-button" type="button" data-favorite-clear>전체 비우기</button>
+    </div>
+    <div class="favorite-list">
+      ${favorites.map((favorite) => {
+        const product = findMarketProduct(favorite.id) || favorite;
+        return `
+          <article class="favorite-item">
+            <strong>${product.name}</strong>
+            <span>${formatWon(product.buyPrice)} / ${product.unit}</span>
+            <div>
+              <button type="button" data-favorite-search="${product.id}">가격보기</button>
+              <button type="button" data-favorite-remove="${product.id}">삭제</button>
+            </div>
+          </article>
+        `;
+      }).join("")}
+    </div>
+  `;
+
+  panel.querySelector("[data-favorite-clear]")?.addEventListener("click", () => {
+    saveMarketFavorites([]);
+    showToast("찜한 품목을 모두 비웠습니다.");
+  });
+
+  panel.querySelectorAll("[data-favorite-search]").forEach((button) => {
+    button.addEventListener("click", () => {
+      searchMarketProduct(findMarketProduct(button.dataset.favoriteSearch));
+    });
+  });
+
+  panel.querySelectorAll("[data-favorite-remove]").forEach((button) => {
+    button.addEventListener("click", () => {
+      removeMarketFavorite(button.dataset.favoriteRemove);
+    });
+  });
+}
+
 function changeQuantity(id, amount) {
   const cart = readCart()
     .map((item) => item.id === id ? { ...item, quantity: item.quantity + amount } : item)
@@ -901,9 +1039,14 @@ function getNeedPrice(id) {
 function searchMarketProduct(product) {
   const searchInput = document.getElementById("marketSearch");
   const categoryInput = document.getElementById("marketCategory");
+  const advancedPanel = document.getElementById("marketAdvanced");
 
   if (!product || !searchInput || !categoryInput) {
     return;
+  }
+
+  if (advancedPanel) {
+    advancedPanel.open = true;
   }
 
   searchInput.value = product.name;
@@ -1017,7 +1160,12 @@ function setupRestaurantDatabase() {
                 <span>${product ? "가격검색 가능" : "직접 입력"}</span>
                 <strong>${getNeedLabel(id)}</strong>
                 <small>${getNeedPrice(id)}</small>
-                ${product ? `<button type="button" data-need-search="${product.id}">가격검색</button>` : `<button type="button" disabled>준비중</button>`}
+                ${product ? `
+                  <div class="need-actions">
+                    <button type="button" data-favorite-id="${product.id}">찜하기</button>
+                    <button type="button" data-need-search="${product.id}">가격보기</button>
+                  </div>
+                ` : `<button type="button" disabled>준비중</button>`}
               </article>
             `;
           }).join("")}
@@ -1051,6 +1199,14 @@ function setupRestaurantDatabase() {
         searchMarketProduct(findMarketProduct(button.dataset.needSearch));
       });
     });
+
+    needs.querySelectorAll("[data-favorite-id]").forEach((button) => {
+      button.addEventListener("click", () => {
+        toggleMarketFavorite(findMarketProduct(button.dataset.favoriteId));
+      });
+    });
+
+    updateFavoriteButtons();
   }
 
   function render() {
@@ -1123,7 +1279,10 @@ function setupMarketSearch() {
         </div>
         <div class="marketplace-grid">${marketplaceRows}</div>
       </div>
-      <button class="add-cart-button" type="button" data-cart-id="market-${product.id}" data-cart-name="${product.name} 마진 분석 요청" data-cart-price="30000" data-cart-desc="${product.name} 기준 가격 비교와 판매가 설계" data-cart-image="../assets/hero-operations.png">이 상품 분석 요청 담기</button>
+      <div class="market-detail-actions">
+        <button class="favorite-button" type="button" data-favorite-id="${product.id}">찜하기</button>
+        <button class="add-cart-button" type="button" data-cart-id="market-${product.id}" data-cart-name="${product.name} 마진 분석 요청" data-cart-price="30000" data-cart-desc="${product.name} 기준 가격 비교와 판매가 설계" data-cart-image="../assets/hero-operations.png">분석 요청 담기</button>
+      </div>
     `;
 
     detail.querySelector(".add-cart-button").addEventListener("click", (event) => {
@@ -1136,6 +1295,12 @@ function setupMarketSearch() {
         image: new URL(button.dataset.cartImage, window.location.href).href
       });
     });
+
+    detail.querySelector("[data-favorite-id]")?.addEventListener("click", (event) => {
+      toggleMarketFavorite(findMarketProduct(event.currentTarget.dataset.favoriteId));
+    });
+
+    updateFavoriteButtons();
   }
 
   function render() {
@@ -1169,12 +1334,15 @@ function setupMarketSearch() {
       `).join("");
 
       return `
-        <button class="market-card" type="button" data-market-id="${product.id}">
-          <span>${product.name}</span>
-          <strong>${formatWon(product.buyPrice)} / ${product.unit}</strong>
-          <small>추천 ${formatWon(sellPrice)} · 마진 ${formatWon(profit)} (${rate.toFixed(1)}%)</small>
-          <div class="marketplace-preview">${marketplacePreview}</div>
-        </button>
+        <article class="market-card">
+          <button class="market-card-main" type="button" data-market-id="${product.id}">
+            <span>${product.name}</span>
+            <strong>${formatWon(product.buyPrice)} / ${product.unit}</strong>
+            <small>추천 ${formatWon(sellPrice)} · 마진 ${formatWon(profit)} (${rate.toFixed(1)}%)</small>
+            <div class="marketplace-preview">${marketplacePreview}</div>
+          </button>
+          <button class="favorite-button" type="button" data-favorite-id="${product.id}">찜하기</button>
+        </article>
       `;
     }).join("");
 
@@ -1187,9 +1355,17 @@ function setupMarketSearch() {
       });
     });
 
+    results.querySelectorAll("[data-favorite-id]").forEach((button) => {
+      button.addEventListener("click", () => {
+        toggleMarketFavorite(findMarketProduct(button.dataset.favoriteId));
+      });
+    });
+
     if (filtered[0]) {
       renderDetail(filtered[0]);
     }
+
+    updateFavoriteButtons();
   }
 
   [searchInput, categoryInput, targetInput].forEach((input) => input.addEventListener("input", render));
@@ -1448,6 +1624,14 @@ document.getElementById("checkoutButton")?.addEventListener("click", () => {
   window.location.href = "./checkout.html";
 });
 
+if (window.location.hash === "#recipeForm") {
+  const recipePanel = document.getElementById("recipeCalculatorPanel");
+
+  if (recipePanel) {
+    recipePanel.open = true;
+  }
+}
+
 setupSlider();
 setupNoticeSearch();
 setupFooterLinks();
@@ -1460,5 +1644,7 @@ setupPrepProgress();
 setupAdminGate();
 setupAdminDashboard();
 updateCartBadges();
+renderMarketFavorites();
+updateFavoriteButtons();
 renderCart();
 renderCheckout();

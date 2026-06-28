@@ -30,8 +30,8 @@
   <main class="subpage">
     <section class="page-hero compact-hero">
       <p class="eyebrow dark">가격검색</p>
-      <h1>상품 원가와 판매 마진을 검색해서 바로 비교합니다.</h1>
-      <p>KAMIS 가격정보, 농넷 같은 공공 데이터 구조를 참고해 만든 기준가 검색 도구입니다. 실시간 API 연결 전에는 지역·등급·시세 변동에 맞춰 직접 수정하면서 계산하는 방식으로 사용하세요.</p>
+      <h1>업종을 고르고 필요한 품목만 골라 담습니다.</h1>
+      <p>처음부터 검색창을 뒤지는 대신, 식당 업종을 먼저 고른 뒤 필요한 재료와 포장재를 확인하고 찜해두세요.</p>
     </section>
 
     <section class="section market-search-section">
@@ -55,75 +55,89 @@
             <p>왼쪽에서 업종을 누르면 필요한 품목이 분류되어 표시됩니다.</p>
           </aside>
         </div>
+        <aside class="market-favorites" id="marketFavorites" aria-live="polite"></aside>
       </div>
 
-      <div class="market-toolbar">
-        <label>상품 검색
-          <input type="search" id="marketSearch" placeholder="예: 사과, 배, 양파, 돼지고기, 밀가루">
-        </label>
-        <label>분류
-          <select id="marketCategory">
-            <option value="all">전체</option>
-            <option value="fruit">과일</option>
-            <option value="vegetable">채소</option>
-            <option value="meat">축산</option>
-            <option value="grain">곡물/가공</option>
-            <option value="restaurant">식당 재료</option>
-            <option value="packaging">포장/소모품</option>
-            <option value="supplies">운영용품</option>
-          </select>
-        </label>
-        <label>목표 마진율
-          <input type="number" id="targetMargin" value="30" min="0" max="90">
-        </label>
-      </div>
+      <details class="market-advanced-panel" id="marketAdvanced">
+        <summary>
+          <span>상품명으로 직접 검색</span>
+          <small>104,177개 기준가 샘플에서 찾기</small>
+        </summary>
 
-      <div class="source-note">
-        <strong>데이터 기준</strong>
-        <span>KAMIS는 농수축산물 가격정보와 Open API를 제공하며, 농넷은 농산물 유통 종합정보를 제공합니다. 쿠팡, 지마켓, 네이버 가격은 실시간 수집값이 아니라 비교용 기준가 샘플입니다. 실제 매입/판매 전에는 각 마켓 검색 버튼으로 최신 가격을 확인하세요.</span>
-        <em id="marketCount">현재 104,177개 품목 검색 가능</em>
-      </div>
+        <div class="market-toolbar">
+          <label>상품 검색
+            <input type="search" id="marketSearch" placeholder="예: 사과, 배, 양파, 돼지고기, 밀가루">
+          </label>
+          <label>분류
+            <select id="marketCategory">
+              <option value="all">전체</option>
+              <option value="fruit">과일</option>
+              <option value="vegetable">채소</option>
+              <option value="meat">축산</option>
+              <option value="grain">곡물/가공</option>
+              <option value="restaurant">식당 재료</option>
+              <option value="packaging">포장/소모품</option>
+              <option value="supplies">운영용품</option>
+            </select>
+          </label>
+          <label>목표 마진율
+            <input type="number" id="targetMargin" value="30" min="0" max="90">
+          </label>
+        </div>
 
-      <div class="market-layout">
-        <div class="market-results" id="marketResults" aria-live="polite"></div>
-        <aside class="market-detail" id="marketDetail">
-          <p class="eyebrow dark">선택 상품</p>
-          <h2>상품을 선택하세요.</h2>
-          <p>왼쪽 결과에서 상품을 누르면 매입가, 예상 판매가, 공구 마진, 단위 원가를 계산합니다.</p>
-        </aside>
-      </div>
+        <div class="source-note">
+          <strong>데이터 기준</strong>
+          <span>KAMIS는 농수축산물 가격정보와 Open API를 제공하며, 농넷은 농산물 유통 종합정보를 제공합니다. 쿠팡, 지마켓, 네이버 가격은 실시간 수집값이 아니라 비교용 기준가 샘플입니다. 실제 매입/판매 전에는 각 마켓 검색 버튼으로 최신 가격을 확인하세요.</span>
+          <em id="marketCount">현재 104,177개 품목 검색 가능</em>
+        </div>
+
+        <div class="market-layout">
+          <div class="market-results" id="marketResults" aria-live="polite"></div>
+          <aside class="market-detail" id="marketDetail">
+            <p class="eyebrow dark">선택 상품</p>
+            <h2>상품을 선택하세요.</h2>
+            <p>왼쪽 결과에서 상품을 누르면 매입가, 예상 판매가, 공구 마진, 단위 원가를 계산합니다.</p>
+          </aside>
+        </div>
+      </details>
     </section>
 
     <section class="section recipe-section">
-      <div class="section-heading">
-        <p class="eyebrow dark">식당 메뉴 원가 계산</p>
-        <h2>여러 재료가 섞인 메뉴는 그램수로 계산합니다.</h2>
-        <p>식당 메뉴는 단일 상품 마진보다 재료별 사용량이 중요합니다. 예를 들어 샐러드, 덮밥, 도시락처럼 여러 재료가 섞이면 1kg 단가를 1g 단가로 바꿔 합산합니다.</p>
-      </div>
-      <div class="recipe-calculator">
-        <form class="recipe-form" id="recipeForm">
-          <label>메뉴 판매가
-            <input type="number" id="menuPrice" value="12000" min="0">
-          </label>
-          <label>포장/소모품비
-            <input type="number" id="menuPacking" value="800" min="0">
-          </label>
-          <label>플랫폼/카드 수수료
-            <input type="number" id="menuFee" value="600" min="0">
-          </label>
-        </form>
-        <div class="ingredient-list" id="ingredientList"></div>
-        <div class="recipe-actions">
-          <button class="primary-button" type="button" id="addIngredient">재료 추가</button>
-          <button class="link-button" type="button" id="loadSampleRecipe">샐러드 예시 불러오기</button>
+      <details class="recipe-disclosure" id="recipeCalculatorPanel">
+        <summary>
+          <span>식당 메뉴 원가 계산 펼치기</span>
+          <small>여러 재료가 섞인 메뉴는 그램수로 계산합니다.</small>
+        </summary>
+        <div class="section-heading">
+          <p class="eyebrow dark">식당 메뉴 원가 계산</p>
+          <h2>재료별 사용량을 넣어 메뉴 마진을 봅니다.</h2>
+          <p>샐러드, 덮밥, 도시락처럼 여러 재료가 섞이면 1kg 단가를 1g 단가로 바꿔 합산합니다.</p>
         </div>
-        <aside class="recipe-result">
-          <span>메뉴 예상 마진</span>
-          <strong id="menuProfit">0원</strong>
-          <div class="summary-row"><span>재료 원가</span><b id="ingredientCost">0원</b></div>
-          <div class="summary-row"><span>마진율</span><b id="menuMarginRate">0%</b></div>
-        </aside>
-      </div>
+        <div class="recipe-calculator">
+          <form class="recipe-form" id="recipeForm">
+            <label>메뉴 판매가
+              <input type="number" id="menuPrice" value="12000" min="0">
+            </label>
+            <label>포장/소모품비
+              <input type="number" id="menuPacking" value="800" min="0">
+            </label>
+            <label>플랫폼/카드 수수료
+              <input type="number" id="menuFee" value="600" min="0">
+            </label>
+          </form>
+          <div class="ingredient-list" id="ingredientList"></div>
+          <div class="recipe-actions">
+            <button class="primary-button" type="button" id="addIngredient">재료 추가</button>
+            <button class="link-button" type="button" id="loadSampleRecipe">샐러드 예시 불러오기</button>
+          </div>
+          <aside class="recipe-result">
+            <span>메뉴 예상 마진</span>
+            <strong id="menuProfit">0원</strong>
+            <div class="summary-row"><span>재료 원가</span><b id="ingredientCost">0원</b></div>
+            <div class="summary-row"><span>마진율</span><b id="menuMarginRate">0%</b></div>
+          </aside>
+        </div>
+      </details>
     </section>
   </main>
 
