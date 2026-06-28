@@ -20,7 +20,7 @@
 - `pages/find-account.html`: ID/PW 찾기 화면
 - `pages/terms.html`: 이용약관 자리
 - `pages/privacy.html`: 개인정보처리방침 자리
-- `pages/admin.html`: 관리자 확인용 대시보드. 실제 배포 전에는 로그인 보호 필요
+- `pages/admin.html`: 관리자 확인용 대시보드. 현재는 정적 사이트용 임시 로그인 잠금이며, 실제 배포 전에는 서버 로그인 보호 필요
 
 ## 기능
 

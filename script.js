@@ -1,4 +1,6 @@
 const CART_KEY = "ahimha-cart";
+const ADMIN_AUTH_KEY = "ahimha-admin-auth";
+const ADMIN_CREDENTIAL_HASH = "1dd87a003c3d682c5cf1914258701986b9e805c8b6da5574fd582e2aa896a746";
 const currency = new Intl.NumberFormat("ko-KR");
 const MARKET_PRODUCTS = [
   { id: "apple", name: "사과", aliases: "부사 홍로 과일", category: "fruit", unit: "kg", buyPrice: 4200, retailPrice: 6500, sellPrice: 7900, source: "KAMIS/도매·소매 기준가 샘플", updated: "2026-06-28" },
@@ -46,6 +48,14 @@ function saveCart(cart) {
 
 function formatWon(value) {
   return `${currency.format(value)}원`;
+}
+
+async function sha256(text) {
+  const data = new TextEncoder().encode(text);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 function showToast(message) {
@@ -635,6 +645,58 @@ function setupAdminDashboard() {
   }
 }
 
+function setupAdminGate() {
+  const loginGate = document.getElementById("adminLoginGate");
+  const adminContent = document.getElementById("adminContent");
+  const form = document.getElementById("adminLoginForm");
+  const logoutButton = document.getElementById("adminLogoutButton");
+  const message = document.getElementById("adminLoginMessage");
+
+  if (!loginGate || !adminContent || !form) {
+    return;
+  }
+
+  function unlock() {
+    loginGate.hidden = true;
+    adminContent.hidden = false;
+    logoutButton.hidden = false;
+    setupAdminDashboard();
+  }
+
+  if (sessionStorage.getItem(ADMIN_AUTH_KEY) === ADMIN_CREDENTIAL_HASH) {
+    unlock();
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    if (!crypto.subtle) {
+      message.textContent = "이 브라우저에서는 임시 로그인을 사용할 수 없습니다.";
+      return;
+    }
+
+    const id = document.getElementById("adminId").value.trim();
+    const password = document.getElementById("adminPassword").value;
+    const credentialHash = await sha256(`${id}:${password}`);
+
+    if (credentialHash === ADMIN_CREDENTIAL_HASH) {
+      sessionStorage.setItem(ADMIN_AUTH_KEY, credentialHash);
+      form.reset();
+      unlock();
+      return;
+    }
+
+    message.textContent = "ID 또는 비밀번호가 맞지 않습니다.";
+  });
+
+  logoutButton?.addEventListener("click", () => {
+    sessionStorage.removeItem(ADMIN_AUTH_KEY);
+    adminContent.hidden = true;
+    logoutButton.hidden = true;
+    loginGate.hidden = false;
+  });
+}
+
 menuToggle?.addEventListener("click", () => {
   siteHeader?.classList.toggle("is-open");
 });
@@ -706,6 +768,7 @@ setupMarketSearch();
 setupRecipeCalculator();
 setupMarginTool();
 setupPrepProgress();
+setupAdminGate();
 setupAdminDashboard();
 updateCartBadges();
 renderCart();

@@ -8,7 +8,7 @@
   <meta name="description" content="아힘하 관리자 확인용 대시보드입니다.">
   <link rel="stylesheet" href="../styles.css">
 </head>
-<body data-root="..">
+<body data-root=".." data-admin-page="true">
   <header class="site-header admin-header">
     <a class="brand" href="../index.html" aria-label="아힘하 홈"><strong>아힘하</strong><span>관리자</span></a>
     <button class="menu-toggle" type="button" aria-label="메뉴 열기">메뉴</button>
@@ -23,10 +23,27 @@
     <div class="account-actions">
       <a class="ghost-button" href="./mypage.html">마이페이지</a>
       <a class="solid-button" href="./support.html">문의 확인</a>
+      <button class="ghost-button" type="button" id="adminLogoutButton" hidden>로그아웃</button>
     </div>
   </header>
 
-  <main class="admin-page">
+  <section class="admin-login-page" id="adminLoginGate">
+    <form class="admin-login-card" id="adminLoginForm">
+      <p class="eyebrow dark">관리자 로그인</p>
+      <h1>관리자 확인 후 대시보드를 엽니다.</h1>
+      <p>정적 사이트용 임시 잠금입니다. 실제 배포용 보안은 서버 로그인으로 바꿔야 합니다.</p>
+      <label>관리자 ID
+        <input type="text" id="adminId" autocomplete="username" placeholder="관리자 ID">
+      </label>
+      <label>비밀번호
+        <input type="password" id="adminPassword" autocomplete="current-password" placeholder="비밀번호">
+      </label>
+      <button class="primary-button" type="submit">관리자 페이지 열기</button>
+      <span class="admin-login-message" id="adminLoginMessage" aria-live="polite"></span>
+    </form>
+  </section>
+
+  <main class="admin-page" id="adminContent" hidden>
     <section class="admin-hero">
       <div>
         <p class="eyebrow dark">관리자 대시보드</p>

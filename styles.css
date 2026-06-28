@@ -1734,6 +1734,45 @@ textarea {
   background: #f3f7f5;
 }
 
+.admin-login-page {
+  display: grid;
+  place-items: center;
+  min-height: calc(100vh - 74px);
+  padding: 48px 18px;
+  background:
+    linear-gradient(90deg, rgba(251, 252, 250, 0.96), rgba(251, 252, 250, 0.82)),
+    url("./assets/hero-support.png") center / cover;
+}
+
+.admin-login-card {
+  display: grid;
+  gap: 14px;
+  width: min(520px, 100%);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 30px;
+  background: var(--white);
+  box-shadow: var(--shadow);
+}
+
+.admin-login-card h1 {
+  margin: 0;
+  font-size: clamp(30px, 5vw, 44px);
+  line-height: 1.14;
+}
+
+.admin-login-card p:not(.eyebrow) {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.admin-login-message {
+  min-height: 22px;
+  color: var(--coral);
+  font-weight: 850;
+}
+
 .admin-hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
