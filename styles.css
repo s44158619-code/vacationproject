@@ -1626,6 +1626,14 @@ textarea {
   background: #fbfdfc;
 }
 
+.need-thumb {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #eef5f1;
+}
+
 .need-item span {
   color: var(--green-dark);
   font-size: 11px;
@@ -1716,6 +1724,14 @@ textarea {
   border-radius: 8px;
   padding: 12px;
   background: #fbfdfc;
+}
+
+.favorite-item img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #eef5f1;
 }
 
 .favorite-item strong {
@@ -1892,6 +1908,14 @@ textarea {
   text-align: left;
 }
 
+.market-card-image {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #eef5f1;
+}
+
 .market-card:hover {
   border-color: var(--green);
   box-shadow: 0 14px 34px rgba(23, 32, 29, 0.08);
@@ -1939,6 +1963,14 @@ textarea {
   border-radius: 8px;
   padding: 24px;
   background: #fbfdfc;
+}
+
+.market-detail-image {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #eef5f1;
 }
 
 .market-detail h2 {

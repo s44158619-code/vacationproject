@@ -540,6 +540,25 @@ function formatWon(value) {
   return `${currency.format(value)}원`;
 }
 
+function getAssetUrl(filename) {
+  const root = document.body?.dataset.root || ".";
+  return `${root}/assets/${filename}`;
+}
+
+function getProductImage(product) {
+  const imageByCategory = {
+    fruit: "product-fruit.webp",
+    vegetable: "product-vegetable.webp",
+    meat: "product-meat.webp",
+    grain: "product-grain.webp",
+    restaurant: "product-restaurant.webp",
+    packaging: "product-packaging.webp",
+    supplies: "product-supplies.webp"
+  };
+
+  return getAssetUrl(imageByCategory[product?.category] || "product-restaurant.webp");
+}
+
 async function sha256(text) {
   const data = new TextEncoder().encode(text);
   const hashBuffer = await crypto.subtle.digest("SHA-256", data);
@@ -696,6 +715,7 @@ function renderMarketFavorites() {
         const product = findMarketProduct(favorite.id) || favorite;
         return `
           <article class="favorite-item">
+            <img src="${getProductImage(product)}" alt="${product.name} 대표 이미지" loading="lazy">
             <strong>${product.name}</strong>
             <span>${formatWon(product.buyPrice)} / ${product.unit}</span>
             <div>
@@ -1157,6 +1177,7 @@ function setupRestaurantDatabase() {
             const product = findMarketProduct(id);
             return `
               <article class="need-item ${product ? "has-price" : "is-manual"}">
+                ${product ? `<img class="need-thumb" src="${getProductImage(product)}" alt="${product.name} 대표 이미지" loading="lazy">` : ""}
                 <span>${product ? "가격검색 가능" : "직접 입력"}</span>
                 <strong>${getNeedLabel(id)}</strong>
                 <small>${getNeedPrice(id)}</small>
@@ -1259,6 +1280,7 @@ function setupMarketSearch() {
     `).join("");
 
     detail.innerHTML = `
+      <img class="market-detail-image" src="${getProductImage(product)}" alt="${product.name} 대표 이미지">
       <p class="eyebrow dark">선택 상품</p>
       <h2>${product.name}</h2>
       <p>${product.source} · 업데이트 ${product.updated}</p>
@@ -1281,7 +1303,7 @@ function setupMarketSearch() {
       </div>
       <div class="market-detail-actions">
         <button class="favorite-button" type="button" data-favorite-id="${product.id}">찜하기</button>
-        <button class="add-cart-button" type="button" data-cart-id="market-${product.id}" data-cart-name="${product.name} 마진 분석 요청" data-cart-price="30000" data-cart-desc="${product.name} 기준 가격 비교와 판매가 설계" data-cart-image="../assets/hero-operations.png">분석 요청 담기</button>
+        <button class="add-cart-button" type="button" data-cart-id="market-${product.id}" data-cart-name="${product.name} 마진 분석 요청" data-cart-price="30000" data-cart-desc="${product.name} 기준 가격 비교와 판매가 설계" data-cart-image="${getProductImage(product)}">분석 요청 담기</button>
       </div>
     `;
 
@@ -1336,6 +1358,7 @@ function setupMarketSearch() {
       return `
         <article class="market-card">
           <button class="market-card-main" type="button" data-market-id="${product.id}">
+            <img class="market-card-image" src="${getProductImage(product)}" alt="${product.name} 대표 이미지" loading="lazy">
             <span>${product.name}</span>
             <strong>${formatWon(product.buyPrice)} / ${product.unit}</strong>
             <small>추천 ${formatWon(sellPrice)} · 마진 ${formatWon(profit)} (${rate.toFixed(1)}%)</small>
