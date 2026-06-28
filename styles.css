@@ -1419,6 +1419,201 @@ textarea {
   color: var(--green-dark);
 }
 
+.market-search-section {
+  background: var(--white);
+}
+
+.market-toolbar {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) 220px 180px;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.source-note {
+  display: grid;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 18px;
+  background: #fbf7ec;
+}
+
+.source-note span {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.market-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 0.55fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.market-results {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.market-card {
+  display: grid;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+  background: var(--white);
+  color: var(--ink);
+  text-align: left;
+}
+
+.market-card:hover {
+  border-color: var(--green);
+  box-shadow: 0 14px 34px rgba(23, 32, 29, 0.08);
+}
+
+.market-card span {
+  color: var(--green-dark);
+  font-size: 22px;
+  font-weight: 950;
+}
+
+.market-card strong {
+  font-size: 24px;
+}
+
+.market-card small {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.market-detail {
+  position: sticky;
+  top: 96px;
+  display: grid;
+  gap: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 24px;
+  background: #fbfdfc;
+}
+
+.market-detail h2 {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 44px);
+}
+
+.market-detail p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.market-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.market-stat-grid article,
+.market-note {
+  display: grid;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  background: var(--white);
+}
+
+.market-stat-grid span,
+.market-note span {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.market-stat-grid strong {
+  color: var(--green-dark);
+}
+
+.recipe-section {
+  background: #f3f7f5;
+}
+
+.recipe-calculator {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(260px, 0.38fr);
+  gap: 16px;
+}
+
+.recipe-form,
+.ingredient-list,
+.recipe-actions {
+  grid-column: 1;
+}
+
+.recipe-form {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.ingredient-list {
+  display: grid;
+  gap: 10px;
+}
+
+.ingredient-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(150px, 0.5fr) 120px auto;
+  gap: 10px;
+  align-items: end;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  background: var(--white);
+}
+
+.ingredient-row strong {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: var(--green);
+  font-size: 20px;
+}
+
+.recipe-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.recipe-result {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  display: grid;
+  align-content: center;
+  gap: 14px;
+  border-radius: 8px;
+  padding: 24px;
+  background: var(--green-dark);
+  color: var(--white);
+}
+
+.recipe-result > span {
+  color: #d6ebe3;
+  font-weight: 900;
+}
+
+.recipe-result > strong {
+  color: var(--gold);
+  font-size: clamp(38px, 5vw, 58px);
+  line-height: 1;
+}
+
 .admin-header {
   background: rgba(244, 248, 246, 0.98);
 }
@@ -1735,14 +1930,24 @@ textarea {
   .checkout-section,
   .margin-tool,
   .admin-hero,
-  .admin-grid-section {
+  .admin-grid-section,
+  .market-layout,
+  .recipe-calculator {
     grid-template-columns: 1fr;
   }
 
   .position-card,
   .cart-summary,
-  .checkout-summary {
+  .checkout-summary,
+  .market-detail,
+  .recipe-result {
     position: static;
+  }
+
+  .recipe-form,
+  .recipe-result {
+    grid-column: auto;
+    grid-row: auto;
   }
 
   .problem-grid,
@@ -1756,7 +1961,9 @@ textarea {
   .sample-grid,
   .admin-summary-grid,
   .admin-board,
-  .admin-link-grid {
+  .admin-link-grid,
+  .market-results,
+  .market-stat-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -1803,6 +2010,11 @@ textarea {
   .admin-board,
   .admin-link-grid,
   .admin-checklist,
+  .market-toolbar,
+  .market-results,
+  .market-stat-grid,
+  .recipe-form,
+  .ingredient-row,
   .tool-form {
     grid-template-columns: 1fr;
   }
