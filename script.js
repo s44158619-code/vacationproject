@@ -199,7 +199,10 @@ const RESTAURANT_SUPPLY_PRODUCTS = [
   updated: "2026-06-28"
 }));
 
-const MARKET_CATALOG = [...MARKET_PRODUCTS, ...EXTRA_MARKET_PRODUCTS, ...RESTAURANT_SUPPLY_PRODUCTS];
+const GENERATED_MARKET_PRODUCTS = globalThis.AHIMHA_GENERATED_PRODUCTS || [];
+const CURATED_MARKET_PRODUCTS = [...MARKET_PRODUCTS, ...EXTRA_MARKET_PRODUCTS, ...RESTAURANT_SUPPLY_PRODUCTS];
+const MARKET_CATALOG = [...CURATED_MARKET_PRODUCTS, ...GENERATED_MARKET_PRODUCTS];
+const MARKET_PRODUCT_BY_ID = new Map(MARKET_CATALOG.map((product) => [product.id, product]));
 
 const RESTAURANT_CATEGORIES = [
   { id: "all", name: "전체" },
@@ -883,7 +886,7 @@ function getMarketplaceSearchUrl(market, keyword) {
 }
 
 function findMarketProduct(id) {
-  return MARKET_CATALOG.find((product) => product.id === id) || null;
+  return MARKET_PRODUCT_BY_ID.get(id) || null;
 }
 
 function getNeedLabel(id) {
@@ -1074,12 +1077,13 @@ function setupMarketSearch() {
   }
 
   if (countBadge) {
-    countBadge.textContent = `현재 ${MARKET_CATALOG.length}개 품목 검색 가능`;
+    countBadge.textContent = `현재 ${currency.format(MARKET_CATALOG.length)}개 품목 검색 가능`;
   }
 
   function matches(product, keyword, category) {
-    const haystack = `${product.name} ${product.aliases}`.toLowerCase();
-    const categoryMatch = category === "all" || product.category === category || (category === "restaurant" && product.aliases.includes("식당"));
+    const aliases = product.aliases || "";
+    const haystack = `${product.name} ${aliases} ${product.source || ""}`.toLowerCase();
+    const categoryMatch = category === "all" || product.category === category || (category === "restaurant" && aliases.includes("식당"));
     return categoryMatch && haystack.includes(keyword);
   }
 
@@ -1139,8 +1143,26 @@ function setupMarketSearch() {
     const category = categoryInput.value;
     const targetMargin = Number(targetInput.value) || 0;
     const filtered = MARKET_CATALOG.filter((product) => matches(product, keyword, category));
+    const visibleProducts = filtered.slice(0, keyword ? 96 : 60);
 
-    results.innerHTML = filtered.map((product) => {
+    if (!filtered.length) {
+      results.innerHTML = `
+        <div class="empty-cart">
+          <h2>검색 결과가 없습니다.</h2>
+          <p>상품명을 조금 다르게 입력하거나 전체 분류로 다시 검색해보세요.</p>
+        </div>
+      `;
+      return;
+    }
+
+    const resultSummary = `
+      <div class="market-result-summary">
+        <strong>${currency.format(filtered.length)}개 결과</strong>
+        <span>브라우저 속도를 위해 상위 ${currency.format(visibleProducts.length)}개만 먼저 보여줍니다.</span>
+      </div>
+    `;
+
+    results.innerHTML = resultSummary + visibleProducts.map((product) => {
       const { sellPrice, profit, rate } = calculateMargin(product, targetMargin);
       const marketplacePreview = getMarketplacePrices(product).slice(0, 3).map((item) => `
         <em>${item.market} ${formatWon(item.price)}</em>
@@ -1154,16 +1176,11 @@ function setupMarketSearch() {
           <div class="marketplace-preview">${marketplacePreview}</div>
         </button>
       `;
-    }).join("") || `
-      <div class="empty-cart">
-        <h2>검색 결과가 없습니다.</h2>
-        <p>상품명을 조금 다르게 입력하거나 전체 분류로 다시 검색해보세요.</p>
-      </div>
-    `;
+    }).join("");
 
     results.querySelectorAll("[data-market-id]").forEach((button) => {
       button.addEventListener("click", () => {
-        const product = MARKET_CATALOG.find((item) => item.id === button.dataset.marketId);
+        const product = findMarketProduct(button.dataset.marketId);
         if (product) {
           renderDetail(product);
         }
@@ -1199,7 +1216,7 @@ function setupRecipeCalculator() {
   ];
 
   function rowCost(row) {
-    const product = MARKET_CATALOG.find((item) => item.id === row.productId);
+    const product = findMarketProduct(row.productId);
     if (!product) {
       return 0;
     }
@@ -1220,7 +1237,7 @@ function setupRecipeCalculator() {
 
   function render() {
     list.innerHTML = rows.map((row, index) => {
-      const recipeProducts = MARKET_CATALOG.filter((product) => !["packaging", "supplies"].includes(product.category));
+      const recipeProducts = CURATED_MARKET_PRODUCTS.filter((product) => !["packaging", "supplies"].includes(product.category));
       const productOptions = recipeProducts.map((product) => `
         <option value="${product.id}" ${product.id === row.productId ? "selected" : ""}>${product.name} (${formatWon(product.buyPrice)}/${product.unit})</option>
       `).join("");

@@ -1693,6 +1693,29 @@ textarea {
   gap: 12px;
 }
 
+.market-result-summary {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid #d7e5dd;
+  border-radius: 8px;
+  padding: 13px 15px;
+  background: #eef7f2;
+}
+
+.market-result-summary strong {
+  color: var(--green-dark);
+  font-size: 18px;
+}
+
+.market-result-summary span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 850;
+}
+
 .market-card {
   display: grid;
   gap: 8px;
@@ -2394,6 +2417,11 @@ textarea {
 
   .board-toolbar {
     align-items: stretch;
+    flex-direction: column;
+  }
+
+  .market-result-summary {
+    align-items: flex-start;
     flex-direction: column;
   }
 
