@@ -768,7 +768,7 @@ img {
 
 .guide-use-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 14px;
 }
 
@@ -1454,6 +1454,198 @@ textarea {
   background: var(--white);
 }
 
+.restaurant-database {
+  display: grid;
+  gap: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 22px;
+  margin-bottom: 24px;
+  background: #f6faf8;
+}
+
+.restaurant-database .section-heading {
+  max-width: 840px;
+  margin-bottom: 0;
+}
+
+.restaurant-toolbar {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.42fr) minmax(0, 1fr);
+  gap: 14px;
+  align-items: end;
+}
+
+.restaurant-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.restaurant-tabs button {
+  min-height: 38px;
+  border: 1px solid #d7e5dd;
+  border-radius: 999px;
+  padding: 0 13px;
+  background: var(--white);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.restaurant-tabs button.is-active {
+  border-color: var(--green-dark);
+  background: var(--green-dark);
+  color: var(--white);
+}
+
+.restaurant-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.42fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.restaurant-profiles {
+  display: grid;
+  gap: 10px;
+}
+
+.restaurant-card {
+  display: grid;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 15px;
+  background: var(--white);
+  color: var(--ink);
+  text-align: left;
+}
+
+.restaurant-card:hover,
+.restaurant-card.is-active {
+  border-color: var(--green);
+  background: #eef7f2;
+}
+
+.restaurant-card span {
+  color: var(--green-dark);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.restaurant-card strong {
+  font-size: 19px;
+}
+
+.restaurant-card small {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.restaurant-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.restaurant-tags em,
+.restaurant-need-summary span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  border-radius: 999px;
+  padding: 0 8px;
+  background: #e4efe9;
+  color: var(--green-dark);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.restaurant-needs {
+  position: sticky;
+  top: 96px;
+  display: grid;
+  gap: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px;
+  background: var(--white);
+}
+
+.restaurant-needs h2,
+.need-group h3 {
+  margin: 0;
+}
+
+.restaurant-needs > p,
+.need-group p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.restaurant-need-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.need-group {
+  display: grid;
+  gap: 10px;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+}
+
+.need-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+}
+
+.need-item {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  background: #fbfdfc;
+}
+
+.need-item span {
+  color: var(--green-dark);
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.need-item strong {
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.need-item small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.need-item button {
+  min-height: 34px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--green-dark);
+  color: var(--white);
+  font-weight: 950;
+}
+
+.need-item button:disabled {
+  background: #e5e9e7;
+  color: #7c8782;
+  cursor: not-allowed;
+}
+
 .market-toolbar {
   display: grid;
   grid-template-columns: minmax(260px, 1fr) 220px 180px;
@@ -2093,6 +2285,7 @@ textarea {
   .margin-tool,
   .admin-hero,
   .admin-grid-section,
+  .restaurant-layout,
   .market-layout,
   .recipe-calculator {
     grid-template-columns: 1fr;
@@ -2101,6 +2294,7 @@ textarea {
   .position-card,
   .cart-summary,
   .checkout-summary,
+  .restaurant-needs,
   .market-detail,
   .recipe-result {
     position: static;
@@ -2125,6 +2319,7 @@ textarea {
   .admin-summary-grid,
   .admin-board,
   .admin-link-grid,
+  .need-list,
   .market-results,
   .market-stat-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -2174,6 +2369,8 @@ textarea {
   .admin-board,
   .admin-link-grid,
   .admin-checklist,
+  .restaurant-toolbar,
+  .need-list,
   .market-toolbar,
   .market-results,
   .market-stat-grid,
