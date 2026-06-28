@@ -6,6 +6,7 @@
   <title>고객센터 - 아힘하</title>
   <meta name="description" content="아힘하 고객센터와 문의 접수 페이지입니다.">
   <link rel="stylesheet" href="../styles.css">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 </head>
 <body data-root="..">
   <header class="site-header">
@@ -47,27 +48,29 @@
         <a href="mailto:" aria-disabled="true"><strong>Email</strong><span>메일 주소 입력 예정</span></a>
       </div>
 
-      <form class="inquiry-form" data-fake-form>
+      <form class="inquiry-form" id="inquiryForm" data-inquiry-form>
         <h2>문의 남기기</h2>
         <label>문의 유형
-          <select>
+          <select id="inquiryType" name="type">
             <option>주문관리표 제작</option>
             <option>상세페이지 문구</option>
             <option>운영 문구 패키지</option>
             <option>결제/장바구니 문의</option>
+            <option>가격검색/식당 품목 문의</option>
             <option>기타 문의</option>
           </select>
         </label>
         <label>이름 또는 브랜드명
-          <input type="text" placeholder="예: 감귤공구마켓">
+          <input type="text" id="inquiryName" name="name" placeholder="예: 감귤공구마켓" required>
         </label>
         <label>연락처
-          <input type="text" placeholder="카카오톡/이메일/인스타그램 ID">
+          <input type="text" id="inquiryContact" name="contact" placeholder="카카오톡/이메일/인스타그램 ID" required>
         </label>
         <label>문의 내용
-          <textarea rows="6" placeholder="판매 상품, 필요한 작업, 일정, 현재 막힌 부분을 적어주세요."></textarea>
+          <textarea rows="6" id="inquiryMessage" name="message" placeholder="판매 상품, 필요한 작업, 일정, 현재 막힌 부분을 적어주세요." required></textarea>
         </label>
         <button class="primary-button" type="submit">문의 접수하기</button>
+        <p class="form-helper" id="inquiryFormMessage" aria-live="polite">접수 내역은 관리자 대시보드에서 확인할 수 있습니다.</p>
       </form>
     </section>
 

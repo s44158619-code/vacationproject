@@ -1,5 +1,8 @@
 const CART_KEY = "ahimha-cart";
 const MARKET_FAVORITES_KEY = "ahimha-market-favorites";
+const MARKET_RECENT_KEY = "ahimha-market-recent";
+const INQUIRY_KEY = "ahimha-inquiries";
+const ADMIN_CHECKLIST_KEY = "ahimha-admin-checklist";
 const ADMIN_AUTH_KEY = "ahimha-admin-auth";
 const ADMIN_CREDENTIAL_HASH = "1dd87a003c3d682c5cf1914258701986b9e805c8b6da5574fd582e2aa896a746";
 const currency = new Intl.NumberFormat("ko-KR");
@@ -586,6 +589,32 @@ function showToast(message) {
   }, 2200);
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function csvEscape(value) {
+  return `"${String(value ?? "").replaceAll('"', '""')}"`;
+}
+
+function downloadCsv(filename, rows) {
+  const csv = rows.map((row) => row.map(csvEscape).join(",")).join("\n");
+  const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
 function updateCartBadges() {
   const count = readCart().reduce((sum, item) => sum + item.quantity, 0);
   document.querySelectorAll("[data-cart-count]").forEach((badge) => {
@@ -682,6 +711,111 @@ function updateFavoriteButtons() {
   });
 }
 
+function readMarketRecent() {
+  try {
+    return JSON.parse(localStorage.getItem(MARKET_RECENT_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function saveMarketRecent(items) {
+  localStorage.setItem(MARKET_RECENT_KEY, JSON.stringify(items.slice(0, 8)));
+  renderMarketRecent();
+}
+
+function addMarketRecent(product) {
+  if (!product) {
+    return;
+  }
+
+  const item = {
+    id: product.id,
+    name: product.name,
+    buyPrice: product.buyPrice,
+    unit: product.unit
+  };
+
+  saveMarketRecent([
+    item,
+    ...readMarketRecent().filter((recent) => recent.id !== product.id)
+  ]);
+}
+
+function getMarketStarterProducts() {
+  return ["apple", "onion", "pork-belly", "chicken", "rice", "chicken-box"]
+    .map(findMarketProduct)
+    .filter(Boolean);
+}
+
+function renderMarketRecent() {
+  const panel = document.getElementById("marketRecent");
+
+  if (!panel) {
+    return;
+  }
+
+  const recent = readMarketRecent()
+    .map((item) => findMarketProduct(item.id) || item)
+    .filter(Boolean);
+  const products = recent.length ? recent : getMarketStarterProducts();
+
+  panel.innerHTML = `
+    <span>${recent.length ? "최근 본 품목" : "빠른 검색"}</span>
+    ${products.map((product) => `
+      <button type="button" data-recent-search="${product.id}">
+        ${product.name}
+        <small>${formatWon(product.buyPrice)} / ${product.unit}</small>
+      </button>
+    `).join("")}
+  `;
+
+  panel.querySelectorAll("[data-recent-search]").forEach((button) => {
+    button.addEventListener("click", () => {
+      searchMarketProduct(findMarketProduct(button.dataset.recentSearch));
+    });
+  });
+}
+
+function getFavoriteRows() {
+  return readMarketFavorites().map((favorite) => findMarketProduct(favorite.id) || favorite);
+}
+
+function downloadMarketFavorites() {
+  const rows = getFavoriteRows();
+
+  if (!rows.length) {
+    showToast("저장할 찜 품목이 없습니다.");
+    return;
+  }
+
+  downloadCsv("ahimha-favorite-products.csv", [
+    ["품목명", "분류", "예상 매입가", "단위", "출처"],
+    ...rows.map((item) => [item.name, item.category, item.buyPrice, item.unit, item.source || ""])
+  ]);
+}
+
+async function copyMarketFavoritesSummary() {
+  const rows = getFavoriteRows();
+
+  if (!rows.length) {
+    showToast("복사할 찜 품목이 없습니다.");
+    return;
+  }
+
+  const text = [
+    "[아힘하 찜한 품목]",
+    ...rows.map((item, index) => `${index + 1}. ${item.name} - ${formatWon(item.buyPrice)} / ${item.unit}`)
+  ].join("\n");
+
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast("찜 품목 요약을 복사했습니다.");
+  } catch {
+    showToast("복사 권한이 막혔습니다. CSV 저장을 사용해 주세요.");
+  }
+}
+
 function renderMarketFavorites() {
   const panel = document.getElementById("marketFavorites");
 
@@ -708,7 +842,11 @@ function renderMarketFavorites() {
         <p class="eyebrow dark">찜한 품목</p>
         <h2>${favorites.length}개 품목</h2>
       </div>
-      <button class="link-button" type="button" data-favorite-clear>전체 비우기</button>
+      <div class="favorite-actions">
+        <button class="link-button" type="button" data-favorite-copy>요약 복사</button>
+        <button class="link-button" type="button" data-favorite-download>CSV 저장</button>
+        <button class="remove-button" type="button" data-favorite-clear>비우기</button>
+      </div>
     </div>
     <div class="favorite-list">
       ${favorites.map((favorite) => {
@@ -733,6 +871,9 @@ function renderMarketFavorites() {
     showToast("찜한 품목을 모두 비웠습니다.");
   });
 
+  panel.querySelector("[data-favorite-download]")?.addEventListener("click", downloadMarketFavorites);
+  panel.querySelector("[data-favorite-copy]")?.addEventListener("click", copyMarketFavoritesSummary);
+
   panel.querySelectorAll("[data-favorite-search]").forEach((button) => {
     button.addEventListener("click", () => {
       searchMarketProduct(findMarketProduct(button.dataset.favoriteSearch));
@@ -743,6 +884,77 @@ function renderMarketFavorites() {
     button.addEventListener("click", () => {
       removeMarketFavorite(button.dataset.favoriteRemove);
     });
+  });
+}
+
+function readInquiries() {
+  try {
+    return JSON.parse(localStorage.getItem(INQUIRY_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function saveInquiries(inquiries) {
+  localStorage.setItem(INQUIRY_KEY, JSON.stringify(inquiries));
+  setupAdminDashboard();
+}
+
+function addInquiry(inquiry) {
+  const inquiries = readInquiries();
+  inquiries.unshift({
+    id: `inq-${Date.now()}`,
+    status: "new",
+    createdAt: new Date().toISOString(),
+    ...inquiry
+  });
+  saveInquiries(inquiries.slice(0, 200));
+}
+
+function updateInquiryStatus(id, status) {
+  const inquiries = readInquiries().map((inquiry) => (
+    inquiry.id === id ? { ...inquiry, status } : inquiry
+  ));
+  saveInquiries(inquiries);
+}
+
+function removeInquiry(id) {
+  saveInquiries(readInquiries().filter((inquiry) => inquiry.id !== id));
+}
+
+function setupInquiryForm() {
+  const form = document.querySelector("[data-inquiry-form]");
+  const message = document.getElementById("inquiryFormMessage");
+
+  if (!form) {
+    return;
+  }
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const inquiry = {
+      type: document.getElementById("inquiryType")?.value.trim() || "기타 문의",
+      name: document.getElementById("inquiryName")?.value.trim() || "",
+      contact: document.getElementById("inquiryContact")?.value.trim() || "",
+      message: document.getElementById("inquiryMessage")?.value.trim() || ""
+    };
+
+    if (!inquiry.name || !inquiry.contact || !inquiry.message) {
+      if (message) {
+        message.textContent = "이름, 연락처, 문의 내용을 모두 적어주세요.";
+      }
+      showToast("필수 문의 정보를 입력해 주세요.");
+      return;
+    }
+
+    addInquiry(inquiry);
+    form.reset();
+
+    if (message) {
+      message.textContent = "문의가 접수되었습니다. 관리자 대시보드에서 확인할 수 있습니다.";
+    }
+
+    showToast("문의가 접수되었습니다.");
   });
 }
 
@@ -1065,6 +1277,8 @@ function searchMarketProduct(product) {
     return;
   }
 
+  addMarketRecent(product);
+
   if (advancedPanel) {
     advancedPanel.open = true;
   }
@@ -1264,7 +1478,11 @@ function setupMarketSearch() {
     return categoryMatch && haystack.includes(keyword);
   }
 
-  function renderDetail(product) {
+  function renderDetail(product, shouldTrack = false) {
+    if (shouldTrack) {
+      addMarketRecent(product);
+    }
+
     const targetMargin = Number(targetInput.value) || 0;
     const { sellPrice, profit, rate } = calculateMargin(product, targetMargin);
     const gramPrice = product.unit === "kg" ? product.buyPrice / 1000 : product.buyPrice;
@@ -1373,7 +1591,7 @@ function setupMarketSearch() {
       button.addEventListener("click", () => {
         const product = findMarketProduct(button.dataset.marketId);
         if (product) {
-          renderDetail(product);
+          renderDetail(product, true);
         }
       });
     });
@@ -1393,6 +1611,7 @@ function setupMarketSearch() {
 
   [searchInput, categoryInput, targetInput].forEach((input) => input.addEventListener("input", render));
   categoryInput.addEventListener("change", render);
+  renderMarketRecent();
   render();
 }
 
@@ -1499,17 +1718,34 @@ function setupAdminDashboard() {
   const totalElement = document.getElementById("adminCartTotal");
   const previewElement = document.getElementById("adminCartPreview");
   const updatedAtElement = document.getElementById("adminUpdatedAt");
+  const inquiryCountElement = document.getElementById("adminInquiryCount");
+  const favoriteCountElement = document.getElementById("adminFavoriteCount");
+  const inquiryListElement = document.getElementById("adminInquiryList");
 
-  if (!countElement && !totalElement && !previewElement && !updatedAtElement) {
+  if (!countElement && !totalElement && !previewElement && !updatedAtElement && !inquiryListElement) {
     return;
   }
 
   const cart = readCart();
+  const inquiries = readInquiries();
+  const favorites = readMarketFavorites();
   const count = cart.reduce((sum, item) => sum + item.quantity, 0);
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const statusCounts = inquiries.reduce((counts, inquiry) => {
+    counts[inquiry.status || "new"] = (counts[inquiry.status || "new"] || 0) + 1;
+    return counts;
+  }, {});
 
   if (countElement) {
     countElement.textContent = count;
+  }
+
+  if (inquiryCountElement) {
+    inquiryCountElement.textContent = inquiries.filter((inquiry) => inquiry.status !== "done").length;
+  }
+
+  if (favoriteCountElement) {
+    favoriteCountElement.textContent = favorites.length;
   }
 
   if (totalElement) {
@@ -1530,6 +1766,107 @@ function setupAdminDashboard() {
   if (updatedAtElement) {
     updatedAtElement.textContent = `마지막 확인: ${new Date().toLocaleString("ko-KR")}`;
   }
+
+  const statusTargets = {
+    new: document.getElementById("adminStatusNew"),
+    consulting: document.getElementById("adminStatusConsulting"),
+    working: document.getElementById("adminStatusWorking"),
+    done: document.getElementById("adminStatusDone")
+  };
+
+  Object.entries(statusTargets).forEach(([status, element]) => {
+    if (element) {
+      element.textContent = `${statusCounts[status] || 0}건`;
+    }
+  });
+
+  if (inquiryListElement) {
+    inquiryListElement.innerHTML = inquiries.length === 0
+      ? "<p>아직 접수된 문의가 없습니다. 고객센터 폼에서 테스트 문의를 남겨보세요.</p>"
+      : inquiries.map((inquiry) => `
+        <article class="admin-inquiry-item">
+          <div>
+            <span>${escapeHtml(inquiry.type)}</span>
+            <strong>${escapeHtml(inquiry.name)}</strong>
+            <small>${new Date(inquiry.createdAt).toLocaleString("ko-KR")} · ${escapeHtml(inquiry.contact)}</small>
+          </div>
+          <p>${escapeHtml(inquiry.message)}</p>
+          <div class="admin-inquiry-actions">
+            <select data-inquiry-status="${inquiry.id}">
+              <option value="new" ${inquiry.status === "new" ? "selected" : ""}>접수대기</option>
+              <option value="consulting" ${inquiry.status === "consulting" ? "selected" : ""}>상담중</option>
+              <option value="working" ${inquiry.status === "working" ? "selected" : ""}>제작중</option>
+              <option value="done" ${inquiry.status === "done" ? "selected" : ""}>완료</option>
+            </select>
+            <button class="remove-button" type="button" data-inquiry-remove="${inquiry.id}">삭제</button>
+          </div>
+        </article>
+      `).join("");
+
+    inquiryListElement.querySelectorAll("[data-inquiry-status]").forEach((select) => {
+      select.addEventListener("change", () => {
+        updateInquiryStatus(select.dataset.inquiryStatus, select.value);
+      });
+    });
+
+    inquiryListElement.querySelectorAll("[data-inquiry-remove]").forEach((button) => {
+      button.addEventListener("click", () => {
+        removeInquiry(button.dataset.inquiryRemove);
+        showToast("문의가 삭제되었습니다.");
+      });
+    });
+  }
+
+  const exportButton = document.getElementById("adminExportInquiries");
+  const clearButton = document.getElementById("adminClearInquiries");
+
+  if (exportButton) {
+    exportButton.onclick = () => {
+      const rows = readInquiries();
+
+      if (!rows.length) {
+        showToast("저장할 문의가 없습니다.");
+        return;
+      }
+
+      downloadCsv("ahimha-inquiries.csv", [
+        ["접수일", "상태", "유형", "이름/브랜드", "연락처", "내용"],
+        ...rows.map((inquiry) => [
+          new Date(inquiry.createdAt).toLocaleString("ko-KR"),
+          inquiry.status,
+          inquiry.type,
+          inquiry.name,
+          inquiry.contact,
+          inquiry.message
+        ])
+      ]);
+    };
+  }
+
+  if (clearButton) {
+    clearButton.onclick = () => {
+      saveInquiries([]);
+      showToast("문의 내역을 비웠습니다.");
+    };
+  }
+}
+
+function setupAdminChecklist() {
+  const checklist = document.querySelector(".admin-checklist");
+
+  if (!checklist) {
+    return;
+  }
+
+  const inputs = Array.from(checklist.querySelectorAll("input[type='checkbox']"));
+  const saved = JSON.parse(localStorage.getItem(ADMIN_CHECKLIST_KEY) || "[]");
+
+  inputs.forEach((input, index) => {
+    input.checked = Boolean(saved[index]);
+    input.addEventListener("change", () => {
+      localStorage.setItem(ADMIN_CHECKLIST_KEY, JSON.stringify(inputs.map((item) => item.checked)));
+    });
+  });
 }
 
 function setupAdminGate() {
@@ -1606,6 +1943,13 @@ document.querySelectorAll(".add-cart-button").forEach((button) => {
   });
 });
 
+document.querySelectorAll('a[aria-disabled="true"]').forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    showToast("아직 연결 전입니다. 계정 정보를 받으면 바로 연결할 수 있습니다.");
+  });
+});
+
 document.addEventListener("click", (event) => {
   const control = event.target.closest("[data-cart-action]");
 
@@ -1659,12 +2003,15 @@ setupSlider();
 setupNoticeSearch();
 setupFooterLinks();
 setupToolsNavLink();
+setupInquiryForm();
 setupRestaurantDatabase();
 setupMarketSearch();
+renderMarketRecent();
 setupRecipeCalculator();
 setupMarginTool();
 setupPrepProgress();
 setupAdminGate();
+setupAdminChecklist();
 setupAdminDashboard();
 updateCartBadges();
 renderMarketFavorites();

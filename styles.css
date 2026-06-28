@@ -971,6 +971,13 @@ img {
   font-size: 30px;
 }
 
+.form-helper {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
 label {
   display: grid;
   gap: 8px;
@@ -1725,6 +1732,17 @@ textarea {
   gap: 12px;
 }
 
+.favorite-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.favorite-actions button {
+  min-height: 34px;
+}
+
 .favorite-list {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1820,6 +1838,39 @@ textarea {
 .recipe-disclosure[open] summary {
   border-bottom: 1px solid var(--line);
   margin-bottom: 16px;
+}
+
+.market-recent {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 18px 14px;
+}
+
+.market-recent > span {
+  color: var(--green-dark);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.market-recent button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  border: 1px solid #d7e5dd;
+  border-radius: 999px;
+  padding: 0 12px;
+  background: #f6faf8;
+  color: var(--ink);
+  font-weight: 900;
+}
+
+.market-recent small {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
 }
 
 .market-advanced-panel > .market-toolbar,
@@ -2412,6 +2463,53 @@ textarea {
   font-weight: 950;
 }
 
+.admin-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.admin-inquiry-list {
+  display: grid;
+  gap: 10px;
+}
+
+.admin-inquiry-item {
+  display: grid;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  background: #fbfdfc;
+}
+
+.admin-inquiry-item > div:first-child {
+  display: grid;
+  gap: 5px;
+}
+
+.admin-inquiry-item span {
+  color: var(--green-dark);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.admin-inquiry-item strong {
+  font-size: 20px;
+}
+
+.admin-inquiry-item small,
+.admin-inquiry-item p {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.admin-inquiry-actions {
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) auto;
+  gap: 10px;
+}
+
 .admin-link-grid {
   grid-template-columns: repeat(4, 1fr);
 }
@@ -2678,11 +2776,28 @@ textarea {
 
   .market-advanced-panel summary,
   .recipe-disclosure summary,
-  .favorite-head {
+  .favorite-head,
+  .favorite-actions {
     align-items: flex-start;
     flex-direction: column;
     padding-top: 14px;
     padding-bottom: 14px;
+  }
+
+  .favorite-actions,
+  .favorite-actions button,
+  .admin-inquiry-actions {
+    width: 100%;
+  }
+
+  .market-recent button {
+    justify-content: space-between;
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  .admin-inquiry-actions {
+    grid-template-columns: 1fr;
   }
 
   .notice-row {
