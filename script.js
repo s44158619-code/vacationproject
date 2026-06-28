@@ -715,7 +715,7 @@ function renderMarketFavorites() {
         const product = findMarketProduct(favorite.id) || favorite;
         return `
           <article class="favorite-item">
-            <img src="${getProductImage(product)}" alt="${product.name} 대표 이미지" loading="lazy">
+            <img src="${getProductImage(product)}" alt="${product.name} 대표 이미지">
             <strong>${product.name}</strong>
             <span>${formatWon(product.buyPrice)} / ${product.unit}</span>
             <div>
@@ -1177,7 +1177,7 @@ function setupRestaurantDatabase() {
             const product = findMarketProduct(id);
             return `
               <article class="need-item ${product ? "has-price" : "is-manual"}">
-                ${product ? `<img class="need-thumb" src="${getProductImage(product)}" alt="${product.name} 대표 이미지" loading="lazy">` : ""}
+                ${product ? `<img class="need-thumb" src="${getProductImage(product)}" alt="${product.name} 대표 이미지">` : ""}
                 <span>${product ? "가격검색 가능" : "직접 입력"}</span>
                 <strong>${getNeedLabel(id)}</strong>
                 <small>${getNeedPrice(id)}</small>
@@ -1358,7 +1358,7 @@ function setupMarketSearch() {
       return `
         <article class="market-card">
           <button class="market-card-main" type="button" data-market-id="${product.id}">
-            <img class="market-card-image" src="${getProductImage(product)}" alt="${product.name} 대표 이미지" loading="lazy">
+            <img class="market-card-image" src="${getProductImage(product)}" alt="${product.name} 대표 이미지">
             <span>${product.name}</span>
             <strong>${formatWon(product.buyPrice)} / ${product.unit}</strong>
             <small>추천 ${formatWon(sellPrice)} · 마진 ${formatWon(profit)} (${rate.toFixed(1)}%)</small>
