@@ -6,6 +6,7 @@ const ORDER_KEY = "ahimha-orders";
 const ADMIN_CHECKLIST_KEY = "ahimha-admin-checklist";
 const ADMIN_AUTH_KEY = "ahimha-admin-auth";
 const ADMIN_CREDENTIAL_HASH = "1dd87a003c3d682c5cf1914258701986b9e805c8b6da5574fd582e2aa896a746";
+const BACKUP_VERSION = 1;
 const currency = new Intl.NumberFormat("ko-KR");
 const STATUS_LABELS = {
   new: "접수대기",
@@ -558,6 +559,13 @@ function formatWon(value) {
   return `${currency.format(value)}원`;
 }
 
+function localDateStamp(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 function getAssetUrl(filename) {
   const root = document.body?.dataset.root || ".";
   return `${root}/assets/${filename}`;
@@ -628,6 +636,28 @@ function downloadCsv(filename, rows) {
   link.click();
   link.remove();
   URL.revokeObjectURL(url);
+}
+
+function downloadJson(filename, data) {
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function readStoredArray(key) {
+  try {
+    const value = JSON.parse(localStorage.getItem(key) || "[]");
+    return Array.isArray(value) ? value : [];
+  } catch {
+    return [];
+  }
 }
 
 function updateCartBadges() {
@@ -727,11 +757,7 @@ function updateFavoriteButtons() {
 }
 
 function readMarketRecent() {
-  try {
-    return JSON.parse(localStorage.getItem(MARKET_RECENT_KEY)) || [];
-  } catch {
-    return [];
-  }
+  return readStoredArray(MARKET_RECENT_KEY);
 }
 
 function saveMarketRecent(items) {
@@ -903,11 +929,7 @@ function renderMarketFavorites() {
 }
 
 function readInquiries() {
-  try {
-    return JSON.parse(localStorage.getItem(INQUIRY_KEY)) || [];
-  } catch {
-    return [];
-  }
+  return readStoredArray(INQUIRY_KEY);
 }
 
 function saveInquiries(inquiries) {
@@ -974,11 +996,7 @@ function setupInquiryForm() {
 }
 
 function readOrders() {
-  try {
-    return JSON.parse(localStorage.getItem(ORDER_KEY)) || [];
-  } catch {
-    return [];
-  }
+  return readStoredArray(ORDER_KEY);
 }
 
 function saveOrders(orders) {
@@ -1889,8 +1907,14 @@ function setupAdminDashboard() {
   const favoriteCountElement = document.getElementById("adminFavoriteCount");
   const inquiryListElement = document.getElementById("adminInquiryList");
   const orderListElement = document.getElementById("adminOrderList");
+  const backupTargets = {
+    orders: document.getElementById("adminBackupOrders"),
+    inquiries: document.getElementById("adminBackupInquiries"),
+    favorites: document.getElementById("adminBackupFavorites"),
+    cart: document.getElementById("adminBackupCart")
+  };
 
-  if (!countElement && !totalElement && !previewElement && !updatedAtElement && !inquiryListElement && !orderListElement) {
+  if (!countElement && !totalElement && !previewElement && !updatedAtElement && !inquiryListElement && !orderListElement && !backupTargets.orders) {
     return;
   }
 
@@ -1919,6 +1943,22 @@ function setupAdminDashboard() {
 
   if (favoriteCountElement) {
     favoriteCountElement.textContent = favorites.length;
+  }
+
+  if (backupTargets.orders) {
+    backupTargets.orders.textContent = orders.length;
+  }
+
+  if (backupTargets.inquiries) {
+    backupTargets.inquiries.textContent = inquiries.length;
+  }
+
+  if (backupTargets.favorites) {
+    backupTargets.favorites.textContent = favorites.length;
+  }
+
+  if (backupTargets.cart) {
+    backupTargets.cart.textContent = count;
   }
 
   if (totalElement) {
@@ -2116,6 +2156,117 @@ function setupAdminChecklist() {
   });
 }
 
+function getChecklistState() {
+  return readStoredArray(ADMIN_CHECKLIST_KEY);
+}
+
+function getLocalBackupData() {
+  return {
+    version: BACKUP_VERSION,
+    exportedAt: new Date().toISOString(),
+    cart: readCart(),
+    orders: readOrders(),
+    inquiries: readInquiries(),
+    favorites: readMarketFavorites(),
+    recent: readMarketRecent(),
+    checklist: getChecklistState()
+  };
+}
+
+function refreshAfterBackupImport() {
+  updateCartBadges();
+  renderCart();
+  renderCheckout();
+  renderMarketFavorites();
+  renderMarketRecent();
+  updateFavoriteButtons();
+  renderMyPageOrders();
+  setupAdminDashboard();
+
+  const checklist = document.querySelector(".admin-checklist");
+  const saved = getChecklistState();
+
+  if (checklist) {
+    Array.from(checklist.querySelectorAll("input[type='checkbox']")).forEach((input, index) => {
+      input.checked = Boolean(saved[index]);
+    });
+  }
+}
+
+function applyBackupData(data) {
+  if (!data || typeof data !== "object") {
+    throw new Error("invalid backup");
+  }
+
+  const arrays = {
+    [CART_KEY]: data.cart,
+    [ORDER_KEY]: data.orders,
+    [INQUIRY_KEY]: data.inquiries,
+    [MARKET_FAVORITES_KEY]: data.favorites,
+    [MARKET_RECENT_KEY]: data.recent,
+    [ADMIN_CHECKLIST_KEY]: data.checklist
+  };
+
+  Object.entries(arrays).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+  });
+
+  refreshAfterBackupImport();
+}
+
+function setupAdminBackup() {
+  const exportButton = document.getElementById("adminExportBackup");
+  const importInput = document.getElementById("adminImportBackup");
+  const message = document.getElementById("adminBackupMessage");
+
+  if (!exportButton && !importInput) {
+    return;
+  }
+
+  exportButton?.addEventListener("click", () => {
+    const stamp = localDateStamp();
+    downloadJson(`ahimha-backup-${stamp}.json`, getLocalBackupData());
+
+    if (message) {
+      message.textContent = "운영 데이터 백업 파일을 저장했습니다.";
+    }
+
+    showToast("백업 파일을 저장했습니다.");
+  });
+
+  importInput?.addEventListener("change", () => {
+    const file = importInput.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+      try {
+        applyBackupData(JSON.parse(String(reader.result || "{}")));
+
+        if (message) {
+          message.textContent = "백업 데이터를 불러왔습니다. 주문, 문의, 찜 목록이 갱신되었습니다.";
+        }
+
+        showToast("백업 데이터를 불러왔습니다.");
+      } catch {
+        if (message) {
+          message.textContent = "백업 파일을 읽지 못했습니다. 아힘하 JSON 백업 파일인지 확인해 주세요.";
+        }
+
+        showToast("백업 파일을 읽지 못했습니다.");
+      } finally {
+        importInput.value = "";
+      }
+    });
+    reader.readAsText(file);
+  });
+}
+
 function setupAdminGate() {
   const loginGate = document.getElementById("adminLoginGate");
   const adminContent = document.getElementById("adminContent");
@@ -2260,6 +2411,7 @@ setupMarginTool();
 setupPrepProgress();
 setupAdminGate();
 setupAdminChecklist();
+setupAdminBackup();
 setupAdminDashboard();
 updateCartBadges();
 renderMarketFavorites();

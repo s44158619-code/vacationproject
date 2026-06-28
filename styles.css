@@ -2376,6 +2376,7 @@ textarea {
 .admin-board-section,
 .admin-order-section,
 .admin-inquiry-section,
+.admin-backup-section,
 .admin-quick-section {
   background: #f3f7f5;
 }
@@ -2464,6 +2465,33 @@ textarea {
   height: 18px;
 }
 
+.admin-data-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.admin-data-grid article {
+  display: grid;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  background: #fbfdfc;
+}
+
+.admin-data-grid span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.admin-data-grid strong {
+  color: var(--green);
+  font-size: 30px;
+  line-height: 1;
+}
+
 .admin-total-row {
   display: flex;
   justify-content: space-between;
@@ -2528,6 +2556,24 @@ textarea {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.file-import-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 16px;
+  background: var(--white);
+  color: var(--green-dark);
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.file-import-button input {
+  display: none;
 }
 
 .admin-inquiry-list,
@@ -2797,6 +2843,7 @@ textarea {
   .admin-board,
   .admin-link-grid,
   .admin-checklist,
+  .admin-data-grid,
   .favorite-list,
   .market-detail-actions,
   .restaurant-toolbar,

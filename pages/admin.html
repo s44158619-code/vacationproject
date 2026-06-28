@@ -176,6 +176,28 @@
       </div>
     </section>
 
+    <section class="section admin-backup-section">
+      <div class="admin-card">
+        <div class="admin-card-head">
+          <p class="eyebrow dark">운영 데이터</p>
+          <h2>브라우저에 저장된 데이터를 백업합니다</h2>
+        </div>
+        <div class="admin-data-grid">
+          <article><span>주문</span><strong id="adminBackupOrders">0</strong></article>
+          <article><span>문의</span><strong id="adminBackupInquiries">0</strong></article>
+          <article><span>찜</span><strong id="adminBackupFavorites">0</strong></article>
+          <article><span>장바구니</span><strong id="adminBackupCart">0</strong></article>
+        </div>
+        <div class="admin-toolbar">
+          <button class="link-button" type="button" id="adminExportBackup">JSON 백업 저장</button>
+          <label class="file-import-button">백업 불러오기
+            <input type="file" id="adminImportBackup" accept="application/json">
+          </label>
+        </div>
+        <p class="form-helper" id="adminBackupMessage" aria-live="polite">정식 서버 연결 전까지는 주기적으로 백업 파일을 저장해두는 것이 좋습니다.</p>
+      </div>
+    </section>
+
     <section class="section admin-quick-section">
       <div class="admin-card">
         <div class="admin-card-head">
