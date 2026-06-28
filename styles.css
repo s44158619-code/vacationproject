@@ -1129,6 +1129,10 @@ textarea {
   padding-top: 14px;
 }
 
+.summary-row.light {
+  border-top-color: var(--line);
+}
+
 .cart-summary p {
   margin: 0;
   color: #d6ebe3;
@@ -1219,6 +1223,61 @@ textarea {
 
 .empty-cart p {
   color: var(--muted);
+}
+
+.order-history-panel {
+  display: grid;
+  gap: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 24px;
+  background: var(--white);
+}
+
+.order-history-panel h2,
+.order-history-panel p {
+  margin: 0;
+}
+
+.order-history-panel > div:first-child p:not(.eyebrow) {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.order-history-list {
+  display: grid;
+  gap: 12px;
+}
+
+.order-history-item {
+  display: grid;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+  background: #fbfdfc;
+}
+
+.order-history-item > div:first-child {
+  display: grid;
+  gap: 5px;
+}
+
+.order-history-item span,
+.admin-order-item span {
+  color: var(--green-dark);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.order-history-item strong {
+  font-size: 21px;
+}
+
+.order-history-item small,
+.order-history-item p {
+  color: var(--muted);
+  line-height: 1.55;
 }
 
 .auth-page {
@@ -2315,6 +2374,8 @@ textarea {
 .admin-summary-section,
 .admin-grid-section,
 .admin-board-section,
+.admin-order-section,
+.admin-inquiry-section,
 .admin-quick-section {
   background: #f3f7f5;
 }
@@ -2469,12 +2530,14 @@ textarea {
   gap: 10px;
 }
 
-.admin-inquiry-list {
+.admin-inquiry-list,
+.admin-order-list {
   display: grid;
   gap: 10px;
 }
 
-.admin-inquiry-item {
+.admin-inquiry-item,
+.admin-order-item {
   display: grid;
   gap: 12px;
   border: 1px solid var(--line);
@@ -2483,7 +2546,8 @@ textarea {
   background: #fbfdfc;
 }
 
-.admin-inquiry-item > div:first-child {
+.admin-inquiry-item > div:first-child,
+.admin-order-item > div:first-child {
   display: grid;
   gap: 5px;
 }
@@ -2494,17 +2558,21 @@ textarea {
   font-weight: 950;
 }
 
-.admin-inquiry-item strong {
+.admin-inquiry-item strong,
+.admin-order-item strong {
   font-size: 20px;
 }
 
 .admin-inquiry-item small,
-.admin-inquiry-item p {
+.admin-inquiry-item p,
+.admin-order-item small,
+.admin-order-item p {
   color: var(--muted);
   line-height: 1.55;
 }
 
-.admin-inquiry-actions {
+.admin-inquiry-actions,
+.admin-order-actions {
   display: grid;
   grid-template-columns: minmax(160px, 1fr) auto;
   gap: 10px;
@@ -2786,7 +2854,8 @@ textarea {
 
   .favorite-actions,
   .favorite-actions button,
-  .admin-inquiry-actions {
+  .admin-inquiry-actions,
+  .admin-order-actions {
     width: 100%;
   }
 
@@ -2796,7 +2865,8 @@ textarea {
     border-radius: 8px;
   }
 
-  .admin-inquiry-actions {
+  .admin-inquiry-actions,
+  .admin-order-actions {
     grid-template-columns: 1fr;
   }
 

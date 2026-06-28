@@ -2,10 +2,17 @@ const CART_KEY = "ahimha-cart";
 const MARKET_FAVORITES_KEY = "ahimha-market-favorites";
 const MARKET_RECENT_KEY = "ahimha-market-recent";
 const INQUIRY_KEY = "ahimha-inquiries";
+const ORDER_KEY = "ahimha-orders";
 const ADMIN_CHECKLIST_KEY = "ahimha-admin-checklist";
 const ADMIN_AUTH_KEY = "ahimha-admin-auth";
 const ADMIN_CREDENTIAL_HASH = "1dd87a003c3d682c5cf1914258701986b9e805c8b6da5574fd582e2aa896a746";
 const currency = new Intl.NumberFormat("ko-KR");
+const STATUS_LABELS = {
+  new: "접수대기",
+  consulting: "상담중",
+  working: "제작중",
+  done: "완료"
+};
 const MARKET_PRODUCTS = [
   { id: "apple", name: "사과", aliases: "부사 홍로 과일", category: "fruit", unit: "kg", buyPrice: 4200, retailPrice: 6500, sellPrice: 7900, source: "KAMIS/도매·소매 기준가 샘플", updated: "2026-06-28" },
   { id: "pear", name: "배", aliases: "신고배 과일", category: "fruit", unit: "kg", buyPrice: 5200, retailPrice: 7800, sellPrice: 9500, source: "KAMIS/도매·소매 기준가 샘플", updated: "2026-06-28" },
@@ -539,6 +546,14 @@ function saveCart(cart) {
   updateCartBadges();
 }
 
+function cartTotal(cart = readCart()) {
+  return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+}
+
+function cartItemCount(cart = readCart()) {
+  return cart.reduce((sum, item) => sum + item.quantity, 0);
+}
+
 function formatWon(value) {
   return `${currency.format(value)}원`;
 }
@@ -958,6 +973,108 @@ function setupInquiryForm() {
   });
 }
 
+function readOrders() {
+  try {
+    return JSON.parse(localStorage.getItem(ORDER_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function saveOrders(orders) {
+  localStorage.setItem(ORDER_KEY, JSON.stringify(orders));
+  setupAdminDashboard();
+  renderMyPageOrders();
+}
+
+function addOrder(order) {
+  const orders = readOrders();
+  orders.unshift({
+    id: `ord-${Date.now()}`,
+    status: "new",
+    createdAt: new Date().toISOString(),
+    ...order
+  });
+  saveOrders(orders.slice(0, 200));
+}
+
+function updateOrderStatus(id, status) {
+  const orders = readOrders().map((order) => (
+    order.id === id ? { ...order, status } : order
+  ));
+  saveOrders(orders);
+}
+
+function removeOrder(id) {
+  saveOrders(readOrders().filter((order) => order.id !== id));
+}
+
+function orderItemsText(order) {
+  return (order.items || [])
+    .map((item) => `${item.name} ${item.quantity}개`)
+    .join(", ");
+}
+
+function setupCheckoutForm() {
+  const form = document.querySelector("[data-checkout-form]");
+  const message = document.getElementById("checkoutFormMessage");
+
+  if (!form) {
+    return;
+  }
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const cart = readCart();
+    const name = document.getElementById("checkoutName")?.value.trim() || "";
+    const contact = document.getElementById("checkoutContact")?.value.trim() || "";
+    const channel = document.getElementById("checkoutChannel")?.value || "기타";
+    const request = document.getElementById("checkoutRequest")?.value.trim() || "";
+
+    if (!cart.length) {
+      if (message) {
+        message.textContent = "상담 접수할 서비스가 없습니다. 먼저 장바구니에 서비스를 담아주세요.";
+      }
+      showToast("장바구니에 담긴 서비스가 없습니다.");
+      return;
+    }
+
+    if (!name || !contact) {
+      if (message) {
+        message.textContent = "이름 또는 브랜드명과 연락 받을 곳을 입력해 주세요.";
+      }
+      showToast("주문자 정보를 입력해 주세요.");
+      return;
+    }
+
+    addOrder({
+      name,
+      contact,
+      channel,
+      request,
+      total: cartTotal(cart),
+      items: cart.map((item) => ({
+        id: item.id,
+        name: item.name,
+        desc: item.desc,
+        price: item.price,
+        quantity: item.quantity
+      }))
+    });
+
+    saveCart([]);
+    renderCheckout();
+    updateCartBadges();
+    form.reset();
+
+    if (message) {
+      message.textContent = "주문 상담이 접수되었습니다. 마이페이지와 관리자 대시보드에서 확인할 수 있습니다.";
+    }
+
+    showToast("주문 상담이 접수되었습니다.");
+  });
+}
+
 function changeQuantity(id, amount) {
   const cart = readCart()
     .map((item) => item.id === id ? { ...item, quantity: item.quantity + amount } : item)
@@ -982,8 +1099,8 @@ function renderCart() {
   }
 
   const cart = readCart();
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const total = cartTotal(cart);
+  const itemCount = cartItemCount(cart);
 
   document.getElementById("cartTotal").textContent = formatWon(total);
   document.getElementById("cartItemCount").textContent = `${itemCount}개`;
@@ -1027,7 +1144,7 @@ function renderCheckout() {
   }
 
   const cart = readCart();
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const total = cartTotal(cart);
   const totalElement = document.getElementById("checkoutTotal");
 
   if (totalElement) {
@@ -1050,6 +1167,55 @@ function renderCheckout() {
       <span>${item.name}</span>
       <strong>${formatWon(item.price * item.quantity)}</strong>
       <small>${item.quantity}개 · ${item.desc}</small>
+    </article>
+  `).join("");
+}
+
+function renderMyPageOrders() {
+  const list = document.getElementById("mypageOrderList");
+  const orders = readOrders();
+  const statusCounts = orders.reduce((counts, order) => {
+    counts[order.status || "new"] = (counts[order.status || "new"] || 0) + 1;
+    return counts;
+  }, {});
+  const statusTargets = {
+    new: document.getElementById("mypageStatusNew"),
+    consulting: document.getElementById("mypageStatusConsulting"),
+    working: document.getElementById("mypageStatusWorking"),
+    done: document.getElementById("mypageStatusDone")
+  };
+
+  Object.entries(statusTargets).forEach(([status, element]) => {
+    if (element) {
+      element.textContent = `${statusCounts[status] || 0}건`;
+    }
+  });
+
+  if (!list) {
+    return;
+  }
+
+  if (!orders.length) {
+    list.innerHTML = `
+      <div class="empty-cart">
+        <h2>아직 접수한 주문 상담이 없습니다.</h2>
+        <p>서비스를 장바구니에 담고 결제 준비 화면에서 상담을 접수해보세요.</p>
+        <a class="primary-button" href="./services.html">서비스 둘러보기</a>
+      </div>
+    `;
+    return;
+  }
+
+  list.innerHTML = orders.map((order) => `
+    <article class="order-history-item">
+      <div>
+        <span>${STATUS_LABELS[order.status] || STATUS_LABELS.new}</span>
+        <strong>${escapeHtml(order.name)}</strong>
+        <small>${new Date(order.createdAt).toLocaleString("ko-KR")} · ${escapeHtml(order.channel)}</small>
+      </div>
+      <p>${escapeHtml(orderItemsText(order))}</p>
+      <div class="summary-row light"><span>예상 합계</span><strong>${formatWon(order.total || 0)}</strong></div>
+      ${order.request ? `<p>${escapeHtml(order.request)}</p>` : ""}
     </article>
   `).join("");
 }
@@ -1719,20 +1885,23 @@ function setupAdminDashboard() {
   const previewElement = document.getElementById("adminCartPreview");
   const updatedAtElement = document.getElementById("adminUpdatedAt");
   const inquiryCountElement = document.getElementById("adminInquiryCount");
+  const orderCountElement = document.getElementById("adminOrderCount");
   const favoriteCountElement = document.getElementById("adminFavoriteCount");
   const inquiryListElement = document.getElementById("adminInquiryList");
+  const orderListElement = document.getElementById("adminOrderList");
 
-  if (!countElement && !totalElement && !previewElement && !updatedAtElement && !inquiryListElement) {
+  if (!countElement && !totalElement && !previewElement && !updatedAtElement && !inquiryListElement && !orderListElement) {
     return;
   }
 
   const cart = readCart();
   const inquiries = readInquiries();
+  const orders = readOrders();
   const favorites = readMarketFavorites();
-  const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const statusCounts = inquiries.reduce((counts, inquiry) => {
-    counts[inquiry.status || "new"] = (counts[inquiry.status || "new"] || 0) + 1;
+  const count = cartItemCount(cart);
+  const total = cartTotal(cart);
+  const statusCounts = [...inquiries, ...orders].reduce((counts, item) => {
+    counts[item.status || "new"] = (counts[item.status || "new"] || 0) + 1;
     return counts;
   }, {});
 
@@ -1742,6 +1911,10 @@ function setupAdminDashboard() {
 
   if (inquiryCountElement) {
     inquiryCountElement.textContent = inquiries.filter((inquiry) => inquiry.status !== "done").length;
+  }
+
+  if (orderCountElement) {
+    orderCountElement.textContent = orders.filter((order) => order.status !== "done").length;
   }
 
   if (favoriteCountElement) {
@@ -1847,6 +2020,80 @@ function setupAdminDashboard() {
     clearButton.onclick = () => {
       saveInquiries([]);
       showToast("문의 내역을 비웠습니다.");
+    };
+  }
+
+  if (orderListElement) {
+    orderListElement.innerHTML = orders.length === 0
+      ? "<p>아직 접수된 주문 상담이 없습니다. 장바구니에서 결제 준비를 거쳐 테스트 접수를 남겨보세요.</p>"
+      : orders.map((order) => `
+        <article class="admin-order-item">
+          <div>
+            <span>${STATUS_LABELS[order.status] || STATUS_LABELS.new}</span>
+            <strong>${escapeHtml(order.name)}</strong>
+            <small>${new Date(order.createdAt).toLocaleString("ko-KR")} · ${escapeHtml(order.contact)} · ${escapeHtml(order.channel)}</small>
+          </div>
+          <p>${escapeHtml(orderItemsText(order))}</p>
+          <div class="summary-row light"><span>예상 합계</span><strong>${formatWon(order.total || 0)}</strong></div>
+          ${order.request ? `<p>${escapeHtml(order.request)}</p>` : ""}
+          <div class="admin-order-actions">
+            <select data-order-status="${order.id}">
+              <option value="new" ${order.status === "new" ? "selected" : ""}>접수대기</option>
+              <option value="consulting" ${order.status === "consulting" ? "selected" : ""}>상담중</option>
+              <option value="working" ${order.status === "working" ? "selected" : ""}>제작중</option>
+              <option value="done" ${order.status === "done" ? "selected" : ""}>완료</option>
+            </select>
+            <button class="remove-button" type="button" data-order-remove="${order.id}">삭제</button>
+          </div>
+        </article>
+      `).join("");
+
+    orderListElement.querySelectorAll("[data-order-status]").forEach((select) => {
+      select.addEventListener("change", () => {
+        updateOrderStatus(select.dataset.orderStatus, select.value);
+      });
+    });
+
+    orderListElement.querySelectorAll("[data-order-remove]").forEach((button) => {
+      button.addEventListener("click", () => {
+        removeOrder(button.dataset.orderRemove);
+        showToast("주문 상담이 삭제되었습니다.");
+      });
+    });
+  }
+
+  const exportOrdersButton = document.getElementById("adminExportOrders");
+  const clearOrdersButton = document.getElementById("adminClearOrders");
+
+  if (exportOrdersButton) {
+    exportOrdersButton.onclick = () => {
+      const rows = readOrders();
+
+      if (!rows.length) {
+        showToast("저장할 주문 상담이 없습니다.");
+        return;
+      }
+
+      downloadCsv("ahimha-orders.csv", [
+        ["접수일", "상태", "이름/브랜드", "연락처", "채널", "예상 합계", "담은 서비스", "요청사항"],
+        ...rows.map((order) => [
+          new Date(order.createdAt).toLocaleString("ko-KR"),
+          STATUS_LABELS[order.status] || STATUS_LABELS.new,
+          order.name,
+          order.contact,
+          order.channel,
+          order.total || 0,
+          orderItemsText(order),
+          order.request || ""
+        ])
+      ]);
+    };
+  }
+
+  if (clearOrdersButton) {
+    clearOrdersButton.onclick = () => {
+      saveOrders([]);
+      showToast("주문 상담 내역을 비웠습니다.");
     };
   }
 }
@@ -2004,6 +2251,7 @@ setupNoticeSearch();
 setupFooterLinks();
 setupToolsNavLink();
 setupInquiryForm();
+setupCheckoutForm();
 setupRestaurantDatabase();
 setupMarketSearch();
 renderMarketRecent();
@@ -2018,3 +2266,4 @@ renderMarketFavorites();
 updateFavoriteButtons();
 renderCart();
 renderCheckout();
+renderMyPageOrders();

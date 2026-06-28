@@ -35,16 +35,16 @@
     </section>
 
     <section class="section checkout-section">
-      <form class="checkout-form" data-fake-form>
+      <form class="checkout-form" id="checkoutForm" data-checkout-form>
         <h2>주문자 정보</h2>
         <label>이름 또는 브랜드명
-          <input type="text" placeholder="예: 감귤공구마켓">
+          <input type="text" id="checkoutName" name="name" placeholder="예: 감귤공구마켓" required>
         </label>
         <label>연락 받을 곳
-          <input type="text" placeholder="이메일, 카카오톡, 인스타그램 ID">
+          <input type="text" id="checkoutContact" name="contact" placeholder="이메일, 카카오톡, 인스타그램 ID" required>
         </label>
         <label>판매 채널
-          <select>
+          <select id="checkoutChannel" name="channel">
             <option>인스타그램 공구</option>
             <option>스마트스토어</option>
             <option>카카오톡 채널</option>
@@ -53,9 +53,10 @@
           </select>
         </label>
         <label>요청사항
-          <textarea rows="6" placeholder="판매 상품, 공구 일정, 필요한 문구, 현재 사용 중인 주문 방식을 적어주세요."></textarea>
+          <textarea rows="6" id="checkoutRequest" name="request" placeholder="판매 상품, 공구 일정, 필요한 문구, 현재 사용 중인 주문 방식을 적어주세요."></textarea>
         </label>
         <button class="primary-button" type="submit">주문 상담 접수하기</button>
+        <p class="form-helper" id="checkoutFormMessage" aria-live="polite">접수하면 관리자 대시보드와 마이페이지에 저장됩니다.</p>
       </form>
 
       <aside class="checkout-summary">

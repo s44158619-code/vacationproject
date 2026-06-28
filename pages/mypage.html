@@ -36,15 +36,24 @@
 
     <section class="section mypage-section">
       <div class="mypage-grid">
-        <article><span>접수 전</span><strong>0건</strong><p>결제 또는 상담 접수 전입니다.</p></article>
-        <article><span>상담 중</span><strong>0건</strong><p>자료 확인과 견적 조율 상태가 표시됩니다.</p></article>
-        <article><span>제작 중</span><strong>0건</strong><p>표와 문구 제작 진행 상태가 표시됩니다.</p></article>
-        <article><span>완료</span><strong>0건</strong><p>완성된 파일과 안내가 표시됩니다.</p></article>
+        <article><span>접수대기</span><strong id="mypageStatusNew">0건</strong><p>방금 들어온 상담 접수입니다.</p></article>
+        <article><span>상담 중</span><strong id="mypageStatusConsulting">0건</strong><p>자료 확인과 견적 조율 상태입니다.</p></article>
+        <article><span>제작 중</span><strong id="mypageStatusWorking">0건</strong><p>표와 문구 제작 진행 상태입니다.</p></article>
+        <article><span>완료</span><strong id="mypageStatusDone">0건</strong><p>완성된 파일과 안내가 표시됩니다.</p></article>
       </div>
-      <div class="empty-cart">
-        <h2>아직 로그인 기능 연결 전입니다.</h2>
-        <p>백엔드와 회원 데이터베이스를 연결하면 실제 사용자별 내역을 보여줄 수 있습니다.</p>
-        <a class="primary-button" href="./services.html">서비스 둘러보기</a>
+      <div class="order-history-panel">
+        <div>
+          <p class="eyebrow dark">상담 내역</p>
+          <h2>이 브라우저에서 접수한 주문 상담</h2>
+          <p>정식 회원 기능 전까지는 현재 브라우저에 접수 내역을 저장합니다.</p>
+        </div>
+        <div class="order-history-list" id="mypageOrderList">
+          <div class="empty-cart">
+            <h2>아직 접수한 주문 상담이 없습니다.</h2>
+            <p>서비스를 장바구니에 담고 결제 준비 화면에서 상담을 접수해보세요.</p>
+            <a class="primary-button" href="./services.html">서비스 둘러보기</a>
+          </div>
+        </div>
       </div>
     </section>
   </main>

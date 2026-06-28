@@ -66,9 +66,9 @@
           <p>고객센터 폼으로 접수된 문의</p>
         </article>
         <article>
-          <span>장바구니 테스트</span>
-          <strong id="adminCartCount">0</strong>
-          <p>현재 브라우저에 담긴 서비스 수</p>
+          <span>상담 주문</span>
+          <strong id="adminOrderCount">0</strong>
+          <p>결제 준비 화면에서 접수된 주문</p>
         </article>
         <article>
           <span>찜한 품목</span>
@@ -76,9 +76,9 @@
           <p>가격검색에서 모아둔 비교 품목</p>
         </article>
         <article>
-          <span>공개 페이지</span>
-          <strong>14</strong>
-          <p>고객용 페이지와 운영 보조 페이지</p>
+          <span>장바구니 테스트</span>
+          <strong id="adminCartCount">0</strong>
+          <p>현재 브라우저에 담긴 서비스 수</p>
         </article>
       </div>
     </section>
@@ -141,6 +141,22 @@
           <p>파일 전달, 수정 마감, 후기 요청</p>
           <span id="adminStatusDone">0건</span>
         </article>
+      </div>
+    </section>
+
+    <section class="section admin-order-section">
+      <div class="admin-card">
+        <div class="admin-card-head">
+          <p class="eyebrow dark">상담 주문</p>
+          <h2>결제 준비 화면에서 접수된 주문</h2>
+        </div>
+        <div class="admin-toolbar">
+          <button class="link-button" type="button" id="adminExportOrders">CSV 저장</button>
+          <button class="remove-button" type="button" id="adminClearOrders">주문 비우기</button>
+        </div>
+        <div class="admin-order-list" id="adminOrderList">
+          <p>아직 접수된 주문 상담이 없습니다.</p>
+        </div>
       </div>
     </section>
 

@@ -13,14 +13,14 @@
 - `pages/notice.html`: 공지사항 목록, 검색, 상세 안내
 - `pages/support.html`: 고객센터, 브라우저 저장형 문의 접수, Instagram/KakaoTalk 연결 예정 자리
 - `pages/cart.html`: 장바구니 수량 변경, 삭제, 예상 합계 계산
-- `pages/checkout.html`: 결제 준비와 주문 상담 접수 화면
-- `pages/mypage.html`: 주문 내역과 상담 상태가 들어갈 마이페이지
+- `pages/checkout.html`: 장바구니 기반 주문 상담 접수와 브라우저 저장
+- `pages/mypage.html`: 브라우저에 저장된 주문 상담 내역과 진행 상태 확인
 - `pages/login.html`: 로그인 화면
 - `pages/signup.html`: 회원가입 화면
 - `pages/find-account.html`: ID/PW 찾기 화면
 - `pages/terms.html`: 이용약관 자리
 - `pages/privacy.html`: 개인정보처리방침 자리
-- `pages/admin.html`: 관리자 확인용 대시보드, 문의 상태 관리, 찜 품목/장바구니 확인. 현재는 정적 사이트용 임시 로그인 잠금이며, 실제 배포 전에는 서버 로그인 보호 필요
+- `pages/admin.html`: 관리자 확인용 대시보드, 주문/문의 상태 관리, 찜 품목/장바구니 확인. 현재는 정적 사이트용 임시 로그인 잠금이며, 실제 배포 전에는 서버 로그인 보호 필요
 - `404.html`: 잘못된 주소로 들어왔을 때 가격검색, 고객센터, 홈으로 안내
 
 ## 기능
@@ -39,6 +39,8 @@
 - 가격검색 최근 본 품목과 빠른 검색 칩
 - localStorage 기반 고객센터 문의 접수와 관리자 대시보드 확인
 - 관리자 문의 상태 변경, 삭제, CSV 저장
+- localStorage 기반 주문 상담 접수와 마이페이지/관리자 대시보드 확인
+- 관리자 주문 상태 변경, 삭제, CSV 저장
 - 관리자 운영 체크리스트 저장
 - 식당 메뉴 그램수 기반 재료 원가 계산
 - 공구 준비율 체크
